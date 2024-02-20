@@ -21,3 +21,32 @@ def log_grabar(texto, dir_log):
     archivo.close()
 
     return 0
+
+def leer_excel_y_convertir_a_lista(nombre_archivo_excel):
+
+	nombre_archivo = nombre_archivo_excel + ".xlsx"
+
+	try:
+		# Leer el archivo Excel
+		df = pd.read_excel(nombre_archivo)
+
+		# Inicializar una lista para almacenar los diccionarios
+		lista_resultante = []
+
+		# Iterar sobre las filas del DataFrame
+		for indice, fila in df.iterrows():
+			# Convertir cada fila a un diccionario
+			diccionario = fila.to_dict()
+
+			# Agregar el diccionario a la lista
+			lista_resultante.append(diccionario)
+
+		# Devolver la lista de diccionarios
+		return lista_resultante
+
+	except FileNotFoundError:
+		print(f"Error: No se pudo encontrar el archivo {nombre_archivo}")
+		return None
+	except Exception as e:
+		print(f"Error: {e}")
+		return None

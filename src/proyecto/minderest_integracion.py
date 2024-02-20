@@ -21,11 +21,22 @@ try:
 	funciones_generales.log_grabar('Minderest - Integracion - Inicio', config.dir_log)
 
 	# Tomar excel de SKU a integrar
-	# Leer datos de SKU de VTEX
-	# Leer datos de SKU de iPoint
+	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista('SKU_integrar')
+	print(lista_sku)
+
+	# Recorremos los SKU
+	for sku in lista_sku:
+		print(sku)
+		# Leer datos de SKU de VTEX
+
+
+		# Leer datos de SKU de iPoint
+
 	# Generar archivo de salida
+
 	# Generar archivo de log (copia)
-	# Subir archivo a FTP
+
+	# Subir archivo a FTP (Musimundo?)
 
 
 except Exception as e:
