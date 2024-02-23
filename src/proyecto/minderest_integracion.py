@@ -15,7 +15,7 @@ El proceso se tiene que poder ejecutar desde una tarea de Windows. Dejarlo en el
 '''
 import config
 import funciones_generales
-
+import funciones_vtex
 
 try:
 	funciones_generales.log_grabar('Minderest - Integracion - Inicio', config.dir_log)
@@ -28,9 +28,16 @@ try:
 	for sku in lista_sku:
 		print(sku)
 		# Leer datos de SKU de VTEX
+		# info_vtex_sku = funciones_vtex.vtex_sku_by_ref_id(sku='kit-gm00002')
+		info_vtex_sku = funciones_vtex.vtex_sku_by_ref_id(sku=sku['SKU'])
+		print("info_vtex_sku")
+		print(info_vtex_sku)
 
 
 		# Leer datos de SKU de iPoint
+
+
+		# complementar datos
 
 	# Generar archivo de salida
 
