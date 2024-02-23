@@ -9,11 +9,11 @@
     "sql_user_int":  "s",
     "sql_pass_int": "Oblongo"
   },
-  "cred_SQL_Bejerman": {
-    "sql_server_sb": "10.29.159",
-    "sql_db_sb": "SBD",
-    "sql_user_sb":  "s",
-    "sql_pass_sb": "Tetraedro"
+  "cred_SQL_ipoint": {
+    "sql_server_ipoint": "10.10.29.200",
+    "sql_db_ipoint": "iPoint_Prod",
+    "sql_user_ipoint":  "sistemas",
+    "sql_pass_ipoint": "Oblongo2020%"
   },
   "cred_SQL_dw": {
     "sql_server_dw": "10.10.29",

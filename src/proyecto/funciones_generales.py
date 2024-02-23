@@ -50,3 +50,52 @@ def leer_excel_y_convertir_a_lista(nombre_archivo_excel):
 	except Exception as e:
 		print(f"Error: {e}")
 		return None
+
+
+def envio_mail(mail_from, mail_to, mail_subject, mail_attachment, mail_content):
+	'''
+	Envio de mail con o sin adjunto
+	:return:
+	'''
+	# crear un objeto de tipo mensaje de email
+	message = EmailMessage()
+
+	# Configurar cabecera del mail
+	message['Subject'] = mail_subject
+	message['From'] = mail_from
+	message['To'] = mail_to
+
+	# configurar cuerpo del mensaje
+	message.set_content(mail_content)
+
+	# tomar el archivo adjunto
+	if mail_attachment and len(mail_attachment) > 0:
+		with open(f"{mail_attachment}", "rb") as f:
+			message.add_attachment(
+				f.read(),
+				filename=f"{mail_attachment}",
+				maintype="application",
+				subtype="vnd.ms-excel"
+			)
+
+	# configurar smtp server y port
+	email_smtp = 'mail.satrendy.net'
+	server = smtplib.SMTP(email_smtp, '587')
+
+	# Identify this client to the SMTP server
+	server.ehlo()
+
+	# Secure the SMTP connection
+	server.starttls()
+
+	# loguearse en el mail
+	sender_email_address = "noreply@satrendy.net"
+	email_password = "Swatch2021%"
+	server.login(sender_email_address, email_password)
+
+	# Send email
+	server.send_message(message)
+	# Close connection to server
+	server.quit()
+
+	return

@@ -21,11 +21,11 @@ sql_db_int = json_data['cred_SQL_integracion']['sql_db_int']
 sql_user_int = json_data['cred_SQL_integracion']['sql_user_int']
 sql_pass_int = json_data['cred_SQL_integracion']['sql_pass_int']
 
-# Defino las credenciales del Server SQL de Bejerman
-sql_server_sb = json_data['cred_SQL_Bejerman']['sql_server_sb']
-sql_db_sb = json_data['cred_SQL_Bejerman']['sql_db_sb']
-sql_user_sb =  json_data['cred_SQL_Bejerman']['sql_user_sb']
-sql_pass_sb =  json_data['cred_SQL_Bejerman']['sql_pass_sb']
+# Defino las credenciales del Server SQL de iPoint
+sql_server_ipoint = json_data['cred_SQL_ipoint']['sql_server_ipoint']
+sql_db_ipoint = json_data['cred_SQL_ipoint']['sql_db_ipoint']
+sql_user_ipoint = json_data['cred_SQL_ipoint']['sql_user_ipoint']
+sql_pass_ipoint = json_data['cred_SQL_ipoint']['sql_pass_ipoint']
 
 # Defino las credenciales del Server SQL DataWareHouse
 sql_server_dw = json_data['cred_SQL_dw']['sql_server_dw']
