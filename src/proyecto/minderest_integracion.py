@@ -16,16 +16,19 @@ El proceso se tiene que poder ejecutar desde una tarea de Windows. Dejarlo en el
 import config
 import funciones_generales
 import funciones_vtex
+import funciones_ipoint
 
 try:
 	funciones_generales.log_grabar('Minderest - Integracion - Inicio', config.dir_log)
 
+	sku_lista = []
 	# Tomar excel de SKU a integrar
 	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista('SKU_integrar')
 	print(lista_sku)
 
 	# Recorremos los SKU
 	for sku in lista_sku:
+		sku_datos = {}
 		print(sku)
 		# Leer datos de SKU de VTEX
 		# info_vtex_sku = funciones_vtex.vtex_sku_by_ref_id(sku='kit-gm00002')
@@ -33,17 +36,33 @@ try:
 		print("info_vtex_sku")
 		print(info_vtex_sku)
 
-
 		# Leer datos de SKU de iPoint
+		info_sku_ipoint = funciones_ipoint.ipoint_by_sku_sql(sql_server=config.sql_server_ipoint,
+		                                    sql_db=config.sql_db_ipoint,
+		                                    sql_user=config.sql_user_ipoint,
+		                                    sql_pass=config.sql_pass_ipoint,
+		                                    sku=sku['SKU'])
+		print('info_sku_ipoint')
+		print(info_sku_ipoint)
 
+		# complementar datos para el SKU
+		sku_datos.update(info_vtex_sku)
+		sku_datos.update(info_sku_ipoint)
 
-		# complementar datos
+		# Agregar datos fijos
+		sku_datos['prueba'] = 0
+		sku_datos['prueba2'] = "valorprueba"
+
+		sku_lista.append(sku_datos)
+
+	print('sku_lista')
+	print(sku_lista)
 
 	# Generar archivo de salida
 
 	# Generar archivo de log (copia)
 
-	# Subir archivo a FTP (Musimundo?)
+# Subir archivo a FTP (Musimundo?)
 
 
 except Exception as e:
@@ -53,21 +72,21 @@ except Exception as e:
 	if hasattr(e, 'message'):
 		funciones_generales.log_grabar(f'ERROR - Termino programa - Message: {e.message}', config.dir_log)
 		funciones_generales.envio_mail(config.mail_from, config.mail_to,
-                                       config.mail_subject,
-                                       '',
-                                       f'Mensaje: {e.message}')
+		                               config.mail_subject,
+		                               '',
+		                               f'Mensaje: {e.message}')
 except PermissionError as e:
-    funciones_generales.log_grabar(f'ERROR - Termino programa: {e.message}', config.dir_log)
-    funciones_generales.log_grabar('ERROR - Termino programa: Error de acceso a directorio', config.dir_log)
-    funciones_generales.envio_mail(config.mail_from, config.mail_to,
-                                   config.mail_subject,
-                                   '',
-                                   f'Mensaje: {e.message}')
-    if hasattr(e, 'message'):
-        funciones_generales.log_grabar(f'ERROR - Termino programa - Message: {e.message}', config.dir_log)
-        funciones_generales.envio_mail(config.mail_from, config.mail_to,
-                                       config.mail_subject,
-                                       '',
-                                       f'Mensaje: {e.message}')
+	funciones_generales.log_grabar(f'ERROR - Termino programa: {e.message}', config.dir_log)
+	funciones_generales.log_grabar('ERROR - Termino programa: Error de acceso a directorio', config.dir_log)
+	funciones_generales.envio_mail(config.mail_from, config.mail_to,
+	                               config.mail_subject,
+	                               '',
+	                               f'Mensaje: {e.message}')
+	if hasattr(e, 'message'):
+		funciones_generales.log_grabar(f'ERROR - Termino programa - Message: {e.message}', config.dir_log)
+		funciones_generales.envio_mail(config.mail_from, config.mail_to,
+		                               config.mail_subject,
+		                               '',
+		                               f'Mensaje: {e.message}')
 finally:
-    funciones_generales.log_grabar('Minderest - Integracion - Fin', config.dir_log)
+	funciones_generales.log_grabar('Minderest - Integracion - Fin', config.dir_log)

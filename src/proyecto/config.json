@@ -3,23 +3,11 @@
     "timezone": "America/Argentina/Buenos_Aires",
     "directorio_log": "minderest_int_log.txt"
   },
-  "cred_SQL_integracion": {
-    "sql_server_int": ".10.29.155",
-    "sql_db_int": "_Style",
-    "sql_user_int":  "s",
-    "sql_pass_int": "Oblongo"
-  },
   "cred_SQL_ipoint": {
     "sql_server_ipoint": "10.10.29.200",
     "sql_db_ipoint": "iPoint_Prod",
     "sql_user_ipoint":  "sistemas",
     "sql_pass_ipoint": "Oblongo2020%"
-  },
-  "cred_SQL_dw": {
-    "sql_server_dw": "10.10.29",
-    "sql_db_dw": "DW_S",
-    "sql_user_dw":  "s",
-    "sql_pass_dw": "Oblongo"
   },
   "envio_mail": {
     "email_smtp": "mail.satrendy.net",
@@ -29,5 +17,8 @@
     "mail_from":  "noreply@satrendy.net",
     "mail_to":  "pablonahra@pnahra.com",
     "mail_subject": "INCONVENIENTE: Integración Minderest"
+  },
+  "parametros_negocio": {
+    "lista_precios_ipoint_id": 2
   }
 }

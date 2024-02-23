@@ -19,13 +19,6 @@ def vtex_requests(vtex_url='', vtex_appkey='', vtex_apptoken=''):
 
     return response_json
 
-'''
-# prueba
-print(vtex_requests(vtex_url="https://stylewatch.vtexcommercestable.com.br/api/logistics/pvt/inventory/skus/4520",
-                    vtex_appkey="vtexappkey-stylewatch-GQVYIK",
-                    vtex_apptoken="VXWQRLVWNMJGBWIHBYOSCPHZSTTXYJYSQOOEBMIPXXRTYZHJCFZQGFPFPXXXSXYDORQNHEFPQZUEXNATMKVSKILKYJODOKWZZOFHJTBYZJZHKKHBXEKICFSGFFOXPBBF"))
-'''
-
 def vtex_sku_by_ref_id(sku=''):
 
     # Busco datos del SKU a partir del SKU que le llega
@@ -34,15 +27,10 @@ def vtex_sku_by_ref_id(sku=''):
                                            f"stockkeepingunit?RefId={sku}",
                                   vtex_appkey="vtexappkey-stylewatch-GQVYIK",
                                   vtex_apptoken="VXWQRLVWNMJGBWIHBYOSCPHZSTTXYJYSQOOEBMIPXXRTYZHJCFZQGFPFPXXXSXYDORQNHEFPQZUEXNATMKVSKILKYJODOKWZZOFHJTBYZJZHKKHBXEKICFSGFFOXPBBF")
-    print("sku_by_ref_id")
-    print(sku_by_ref_id)
-
     # Tomamos mas datos del SKU
     sku_by_id = vtex_requests(vtex_url=f"https://stylewatch.vtexcommercestable.com.br/api/catalog_system/pvt/sku/stockkeepingunitbyid/{sku_by_ref_id['Id']}",
                                   vtex_appkey="vtexappkey-stylewatch-GQVYIK",
                                   vtex_apptoken="VXWQRLVWNMJGBWIHBYOSCPHZSTTXYJYSQOOEBMIPXXRTYZHJCFZQGFPFPXXXSXYDORQNHEFPQZUEXNATMKVSKILKYJODOKWZZOFHJTBYZJZHKKHBXEKICFSGFFOXPBBF")
-    print("sku_by_id")
-    print(sku_by_id)
 
     # Datos de la imagen principal
     # https://developers.vtex.com/docs/api-reference/catalog-api#get-/api/catalog/pvt/stockkeepingunit/-skuId-/file?endpoint=get-/api/catalog/pvt/stockkeepingunit/-skuId-/file
@@ -52,13 +40,8 @@ def vtex_sku_by_ref_id(sku=''):
                                   vtex_appkey="vtexappkey-stylewatch-GQVYIK",
                                   vtex_apptoken="VXWQRLVWNMJGBWIHBYOSCPHZSTTXYJYSQOOEBMIPXXRTYZHJCFZQGFPFPXXXSXYDORQNHEFPQZUEXNATMKVSKILKYJODOKWZZOFHJTBYZJZHKKHBXEKICFSGFFOXPBBF")
 
-    print("sku_image")
-    print(sku_image)
-
     # Filtro solo la primera principal
     main_image = next((img for img in sku_image if img.get('IsMain', False)), None)
-    print("main_image")
-    print(main_image)
 
     # combino datos
     # sku_info_vtex = [{sku_by_ref_id['id'], sku_by_id['NameComplete']}]
@@ -76,7 +59,7 @@ def vtex_sku_by_ref_id(sku=''):
 
 
 
-# SkuId=22714 ProductId = 1782312 ref_id = 'kit-gm00002'
+'''# SkuId=22714 ProductId = 1782312 ref_id = 'kit-gm00002'
 info_vtex = vtex_sku_by_ref_id(sku='kit-gm00002')
 print('info_vtex')
-print(info_vtex)
+print(info_vtex)'''
