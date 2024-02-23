@@ -51,6 +51,73 @@ def leer_excel_y_convertir_a_lista(nombre_archivo_excel):
 		print(f"Error: {e}")
 		return None
 
+def exportacion_excel_old(lista_diccionarios, nombre_archivo_excel, campo_orden=None,incl_fecha=0):
+	# Crear un DataFrame a partir de la lista de diccionarios
+	df = pd.DataFrame(lista_diccionarios)
+
+	# Ordenar la lista si se proporciona un campo de orden
+	if campo_orden:
+		if campo_orden in df.columns:
+			df = df.sort_values(by=campo_orden)
+	else:
+		# Si campo_orden es None, ordenar por la primera clave del primer diccionario
+		if lista_diccionarios:
+			primer_diccionario = lista_diccionarios[0]
+			primer_clave = list(primer_diccionario.keys())[0]
+			df = df.sort_values(by=primer_clave)
+
+	# Agregar fecha y hora al nombre del archivo si incl_fecha es 1
+	if incl_fecha == 1:
+		fecha_hora_actual = hora.now().strftime('%Y_%m_%d_%H_%M_%S')
+		archivo = f"{nombre_archivo_excel}_{fecha_hora_actual}.xlsx"
+	else:
+		archivo = f"{nombre_archivo_excel}.xlsx"
+
+	# Exportar el DataFrame a un archivo Excel
+	df.to_excel(archivo, index=False)
+
+	return
+
+def exportacion_archivo(lista_diccionarios, nombre_archivo, campo_orden=None, incl_fecha=False, tipo_archivo='excel'):
+	'''
+	:param lista_diccionarios:
+	:param nombre_archivo:
+	:param campo_orden:
+	:param incl_fecha:
+	:param tipo_archivo: 'excel' o 'csv'
+	:return:
+	'''
+	# Crear un DataFrame a partir de la lista de diccionarios
+	df = pd.DataFrame(lista_diccionarios)
+
+	# Ordenar la lista si se proporciona un campo de orden
+	if campo_orden:
+		if campo_orden in df.columns:
+			df = df.sort_values(by=campo_orden)
+	else:
+		# Si campo_orden es None, ordenar por la primera clave del primer diccionario
+		if lista_diccionarios:
+			primer_diccionario = lista_diccionarios[0]
+			primer_clave = list(primer_diccionario.keys())[0]
+			df = df.sort_values(by=primer_clave)
+
+	# Agregar fecha y hora al nombre del archivo si incl_fecha es True
+	nombre_archivo_con_fecha = nombre_archivo
+	if incl_fecha:
+		fecha_hora_actual = hora.now().strftime('%Y_%m_%d_%H_%M_%S')
+		nombre_archivo_con_fecha = f"{nombre_archivo}_{fecha_hora_actual}"
+
+	# Exportar el DataFrame a un archivo CSV o Excel según el tipo de archivo especificado
+	if tipo_archivo == 'csv':
+		archivo = f"{nombre_archivo_con_fecha}.csv"
+		df.to_csv(archivo, index=False)
+	elif tipo_archivo == 'excel':
+		archivo = f"{nombre_archivo_con_fecha}.xlsx"
+		df.to_excel(archivo, index=False)
+	else:
+		raise ValueError("Tipo de archivo no válido. Debe ser 'csv' o 'excel'.")
+
+	return archivo
 
 def envio_mail(mail_from, mail_to, mail_subject, mail_attachment, mail_content):
 	'''

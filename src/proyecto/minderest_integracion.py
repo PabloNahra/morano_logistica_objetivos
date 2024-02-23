@@ -50,20 +50,29 @@ try:
 		sku_datos.update(info_sku_ipoint)
 
 		# Agregar datos fijos
-		sku_datos['prueba'] = 0
-		sku_datos['prueba2'] = "valorprueba"
+		sku_datos['PRICE_BEFORE_OFFER'] = 0
+		sku_datos['COST'] = 0
+		sku_datos['CURRENCY'] = "ARS"
+		sku_datos['STOCK'] = 0
+		sku_datos['OWN_BRAND'] = ""
+		sku_datos['OWN_BRAND_COMP'] = ""
+		sku_datos['TAG'] = ""
+		sku_datos['SHIPPING_COST'] = 0
+		sku_datos['UNIT'] = "UNIDAD"
+		sku_datos['VALUE'] = 1
 
 		sku_lista.append(sku_datos)
 
 	print('sku_lista')
 	print(sku_lista)
 
-	# Generar archivo de salida
+	# Generar archivo de salida para subir al FTP
+	funciones_generales.exportacion_archivo(sku_lista, 'sku_lista', incl_fecha=0, tipo_archivo='csv')
 
-	# Generar archivo de log (copia)
+	# Generar archivo de salida de log
+	funciones_generales.exportacion_archivo(sku_lista, 'sku_lista', incl_fecha=1, tipo_archivo='csv')
 
-# Subir archivo a FTP (Musimundo?)
-
+	# Subir archivo a FTP (Musimundo?)
 
 except Exception as e:
 	funciones_generales.log_grabar(f'ERROR - Termino programa - Exception: {e}', config.dir_log)
