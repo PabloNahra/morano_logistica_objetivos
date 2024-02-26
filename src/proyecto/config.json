@@ -20,7 +20,15 @@
     "mail_to":  "pablonahra@pnahra.com",
     "mail_subject": "INCONVENIENTE: Integracion Minderest"
   },
+  "ftp": {
+    "server_ftp": "54.245.133.116",
+    "user_ftp": "sftp-user",
+    "password_ftp": "L1EtoN90JKuLkSow"
+  },
   "parametros_negocio": {
-    "lista_precios_ipoint_id": 4
+    "archivo_skus_integrar": "SKU_integrar",
+    "lista_precios_ipoint_id": 4,
+    "nombre_archivo_exportar": "sku_integrar",
+    "tipo_archivo_exportar": "csv"
   }
 }

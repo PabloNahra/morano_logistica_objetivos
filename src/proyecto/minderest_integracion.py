@@ -22,10 +22,10 @@ from decimal import Decimal
 try:
 	funciones_generales.log_grabar('Minderest - Integracion - Inicio', config.dir_log)
 
-	sku_lista = []
+	sku_lista_exportar = []
 
 	# Tomar excel de SKU a integrar
-	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista('SKU_integrar')
+	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista(config.archivo_skus_integrar)
 
 	# Recorremos los SKU
 	for sku in lista_sku:
@@ -64,19 +64,27 @@ try:
 			'VALUE': 1
 		}
 
-		sku_lista.append(sku_datos_ordenados)
+		sku_lista_exportar.append(sku_datos_ordenados)
 
 	# Generar archivo de salida para subir al FTP
-	funciones_generales.exportacion_archivo(sku_lista, 'sku_lista',
-	                                        incl_fecha=0, tipo_archivo='csv',
+	funciones_generales.exportacion_archivo(sku_lista_exportar, config.nombre_archivo_exportar,
+	                                        incl_fecha=0, tipo_archivo=config.tipo_archivo_exportar,
 	                                        directorio=config.dir_archivo)
 
 	# Generar archivo de salida de log
-	funciones_generales.exportacion_archivo(sku_lista, 'sku_lista',
-	                                        incl_fecha=1, tipo_archivo='csv',
+	funciones_generales.exportacion_archivo(sku_lista_exportar, config.nombre_archivo_exportar,
+	                                        incl_fecha=1, tipo_archivo=config.tipo_archivo_exportar,
 	                                        directorio=config.dir_archivo_historial)
 
-	# Subir archivo a FTP (Musimundo?)
+	# Subir archivo a FTP
+	funciones_generales.subir_archivo_ftp(server=config.server_ftp,
+	                                      user=config.user_ftp,
+	                                      password=config.password_ftp,
+	                                      archivo_local=f"{config.dir_archivo}//"
+	                                                    f"{config.nombre_archivo_exportar}."
+	                                                    f"{config.tipo_archivo_exportar}" ,
+	                                      archivo_remoto=f"{config.nombre_archivo_exportar}."
+	                                                    f"{config.tipo_archivo_exportar}")
 
 
 except Exception as e:

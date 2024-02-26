@@ -1,11 +1,11 @@
 import datetime
-import pyodbc
-import config
 from datetime import datetime as hora
 import smtplib
 from email.message import EmailMessage
 import pandas as pd
 import os
+from ftplib import FTP
+
 
 def obtener_hora_actual():
     hora_actual = hora.now().time()
@@ -177,3 +177,25 @@ def envio_mail(mail_from, mail_to, mail_subject, mail_attachment, mail_content):
 	server.quit()
 
 	return
+
+
+
+def subir_archivo_ftp(server, user, password, archivo_local, archivo_remoto):
+    try:
+        # Conectarse al servidor FTP
+        ftp = FTP(server)
+        ftp.login(user, password)
+
+        # Subir el archivo al servidor FTP
+        with open(archivo_local, 'rb') as archivo:
+            ftp.storbinary(f'STOR {archivo_remoto}', archivo)
+
+        print(f"El archivo {archivo_local} se ha subido correctamente a {archivo_remoto} en el servidor FTP.")
+
+    except Exception as e:
+        print(f"Ocurrió un error al subir el archivo al servidor FTP: {e}")
+
+    finally:
+        # Cerrar la conexión FTP
+        ftp.quit()
+
