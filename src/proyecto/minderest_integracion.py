@@ -17,24 +17,22 @@ import config
 import funciones_generales
 import funciones_vtex
 import funciones_ipoint
+from decimal import Decimal
 
 try:
 	funciones_generales.log_grabar('Minderest - Integracion - Inicio', config.dir_log)
 
 	sku_lista = []
+
 	# Tomar excel de SKU a integrar
 	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista('SKU_integrar')
-	print(lista_sku)
 
 	# Recorremos los SKU
 	for sku in lista_sku:
-		sku_datos = {}
-		print(sku)
+		sku_datos_ordenados = {}
+
 		# Leer datos de SKU de VTEX
-		# info_vtex_sku = funciones_vtex.vtex_sku_by_ref_id(sku='kit-gm00002')
 		info_vtex_sku = funciones_vtex.vtex_sku_by_ref_id(sku=sku['SKU'])
-		print("info_vtex_sku")
-		print(info_vtex_sku)
 
 		# Leer datos de SKU de iPoint
 		info_sku_ipoint = funciones_ipoint.ipoint_by_sku_sql(sql_server=config.sql_server_ipoint,
@@ -42,37 +40,44 @@ try:
 		                                    sql_user=config.sql_user_ipoint,
 		                                    sql_pass=config.sql_pass_ipoint,
 		                                    sku=sku['SKU'])
-		print('info_sku_ipoint')
-		print(info_sku_ipoint)
 
-		# complementar datos para el SKU
-		sku_datos.update(info_vtex_sku)
-		sku_datos.update(info_sku_ipoint)
+		sku_datos_ordenados = {
+			'ID': info_sku_ipoint['ID'],
+			'URL': info_vtex_sku['URL'],
+			'NAME': info_vtex_sku['NAME'],
+			'EAN': info_sku_ipoint['EAN'],
+			'PRICE': round(float(Decimal(info_sku_ipoint['PRICE'])), 2),
+			'PRICE_BEFORE_OFFER': 0,
+			'COST': 0,
+			'CURRENCY': "ARS",
+			'VAT': info_sku_ipoint['VAT'],
+			'STOCK': 0,
+			'URL_IMAGE': info_vtex_sku['URL_IMAGE'],
+			'BRAND': info_sku_ipoint['BRAND'],
+			'OWN_BRAND': "",
+			'OWN_BRAND_COMP': "",
+			'MPN': info_sku_ipoint['MPN'],
+			'CATEGORY': ">".join([value for key, value in info_vtex_sku['CATEGORY'].items()]),
+			'TAG': "",
+			'SHIPPING_COST': 0,
+			'UNIT': "UNIDAD",
+			'VALUE': 1
+		}
 
-		# Agregar datos fijos
-		sku_datos['PRICE_BEFORE_OFFER'] = 0
-		sku_datos['COST'] = 0
-		sku_datos['CURRENCY'] = "ARS"
-		sku_datos['STOCK'] = 0
-		sku_datos['OWN_BRAND'] = ""
-		sku_datos['OWN_BRAND_COMP'] = ""
-		sku_datos['TAG'] = ""
-		sku_datos['SHIPPING_COST'] = 0
-		sku_datos['UNIT'] = "UNIDAD"
-		sku_datos['VALUE'] = 1
-
-		sku_lista.append(sku_datos)
-
-	print('sku_lista')
-	print(sku_lista)
+		sku_lista.append(sku_datos_ordenados)
 
 	# Generar archivo de salida para subir al FTP
-	funciones_generales.exportacion_archivo(sku_lista, 'sku_lista', incl_fecha=0, tipo_archivo='csv')
+	funciones_generales.exportacion_archivo(sku_lista, 'sku_lista',
+	                                        incl_fecha=0, tipo_archivo='csv',
+	                                        directorio=config.dir_archivo)
 
 	# Generar archivo de salida de log
-	funciones_generales.exportacion_archivo(sku_lista, 'sku_lista', incl_fecha=1, tipo_archivo='csv')
+	funciones_generales.exportacion_archivo(sku_lista, 'sku_lista',
+	                                        incl_fecha=1, tipo_archivo='csv',
+	                                        directorio=config.dir_archivo_historial)
 
 	# Subir archivo a FTP (Musimundo?)
+
 
 except Exception as e:
 	funciones_generales.log_grabar(f'ERROR - Termino programa - Exception: {e}', config.dir_log)

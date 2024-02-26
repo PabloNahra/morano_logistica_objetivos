@@ -14,6 +14,8 @@ timezone_argentina = pytz.timezone(json_data['generales']['timezone'])
 # Directorio de Log
 # dir_log = Path('C:/mis_entornos/vtex_api_catalogo/src/proyecto/vtex_catalogo_log.txt')
 dir_log = Path(json_data['generales']['directorio_log'])
+dir_archivo = Path(json_data['generales']['directorio_archivo'])
+dir_archivo_historial = Path(json_data['generales']['directorio_archivo_historial'])
 
 # Defino las credenciales del Server SQL de iPoint
 sql_server_ipoint = json_data['cred_SQL_ipoint']['sql_server_ipoint']

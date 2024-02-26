@@ -5,6 +5,7 @@ from datetime import datetime as hora
 import smtplib
 from email.message import EmailMessage
 import pandas as pd
+import os
 
 def obtener_hora_actual():
     hora_actual = hora.now().time()
@@ -78,7 +79,9 @@ def exportacion_excel_old(lista_diccionarios, nombre_archivo_excel, campo_orden=
 
 	return
 
-def exportacion_archivo(lista_diccionarios, nombre_archivo, campo_orden=None, incl_fecha=False, tipo_archivo='excel'):
+def exportacion_archivo(lista_diccionarios, nombre_archivo,
+                        campo_orden=None, incl_fecha=False,
+                        tipo_archivo='excel', directorio=None):
 	'''
 	:param lista_diccionarios:
 	:param nombre_archivo:
@@ -107,12 +110,20 @@ def exportacion_archivo(lista_diccionarios, nombre_archivo, campo_orden=None, in
 		fecha_hora_actual = hora.now().strftime('%Y_%m_%d_%H_%M_%S')
 		nombre_archivo_con_fecha = f"{nombre_archivo}_{fecha_hora_actual}"
 
+	# Determinar el directorio de destino
+	if directorio:
+		if not os.path.exists(directorio):
+			os.makedirs(directorio)
+		archivo = os.path.join(directorio, nombre_archivo_con_fecha)
+	else:
+		archivo = nombre_archivo_con_fecha
+
 	# Exportar el DataFrame a un archivo CSV o Excel según el tipo de archivo especificado
 	if tipo_archivo == 'csv':
-		archivo = f"{nombre_archivo_con_fecha}.csv"
+		archivo += ".csv"
 		df.to_csv(archivo, index=False)
 	elif tipo_archivo == 'excel':
-		archivo = f"{nombre_archivo_con_fecha}.xlsx"
+		archivo += ".xlsx"
 		df.to_excel(archivo, index=False)
 	else:
 		raise ValueError("Tipo de archivo no válido. Debe ser 'csv' o 'excel'.")

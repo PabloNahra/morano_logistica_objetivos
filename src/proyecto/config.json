@@ -1,7 +1,9 @@
 {
   "generales": {
     "timezone": "America/Argentina/Buenos_Aires",
-    "directorio_log": "minderest_int_log.txt"
+    "directorio_log": "minderest_int_log.txt",
+    "directorio_archivo": "C:\\Temporal\\Minderest",
+    "directorio_archivo_historial": "C:\\Temporal\\Minderest\\Historial"
   },
   "cred_SQL_ipoint": {
     "sql_server_ipoint": "10.10.29.200",
@@ -16,9 +18,9 @@
     "email_password": "Swatch2021%",
     "mail_from":  "noreply@satrendy.net",
     "mail_to":  "pablonahra@pnahra.com",
-    "mail_subject": "INCONVENIENTE: Integración Minderest"
+    "mail_subject": "INCONVENIENTE: Integracion Minderest"
   },
   "parametros_negocio": {
-    "lista_precios_ipoint_id": 2
+    "lista_precios_ipoint_id": 4
   }
 }

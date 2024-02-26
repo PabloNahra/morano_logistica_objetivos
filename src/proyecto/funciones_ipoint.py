@@ -41,7 +41,7 @@ def ipoint_by_sku_sql(sql_server, sql_db, sql_user, sql_pass, sku=''):
 	sku_info_ipoint_precio = {}
 
 	sql = "SELECT " \
-	      "Precio AS PRICE, " \
+	      "ROUND(Precio, 0) AS PRICE, " \
 	      "ID_Lista_Precio " \
 	      "FROM Precio_SKU " \
 	      "WHERE  " \
