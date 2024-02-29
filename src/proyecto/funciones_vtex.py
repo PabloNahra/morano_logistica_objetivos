@@ -23,10 +23,12 @@ def vtex_sku_by_ref_id(sku=''):
 
     # Busco datos del SKU a partir del SKU que le llega
     # https://developers.vtex.com/docs/api-reference/catalog-api#get-/api/catalog/pvt/stockkeepingunit?endpoint=get-/api/catalog/pvt/stockkeepingunit
+
     sku_by_ref_id = vtex_requests(vtex_url=f"https://stylewatch.vtexcommercestable.com.br/api/catalog/pvt/"
                                            f"stockkeepingunit?RefId={sku}",
                                   vtex_appkey="vtexappkey-stylewatch-GQVYIK",
                                   vtex_apptoken="VXWQRLVWNMJGBWIHBYOSCPHZSTTXYJYSQOOEBMIPXXRTYZHJCFZQGFPFPXXXSXYDORQNHEFPQZUEXNATMKVSKILKYJODOKWZZOFHJTBYZJZHKKHBXEKICFSGFFOXPBBF")
+
     # Tomamos mas datos del SKU
     sku_by_id = vtex_requests(vtex_url=f"https://stylewatch.vtexcommercestable.com.br/api/catalog_system/pvt/sku/stockkeepingunitbyid/{sku_by_ref_id['Id']}",
                                   vtex_appkey="vtexappkey-stylewatch-GQVYIK",
@@ -53,7 +55,8 @@ def vtex_sku_by_ref_id(sku=''):
                      'URL_IMAGE': sku_by_id['ImageUrl'],
                          # f"https://stylewatch.vteximg.com.br/arquivos/ids/{main_image['ArchiveId']}-100-100/"
                          # f"{main_image['Name']}.jpg",
-                     'CATEGORY': sku_by_id['ProductCategories']
+                     'CATEGORY': sku_by_id['ProductCategories'],
+                     'TAG': sku_by_id['KeyWords'],
                      }
 
     return sku_info_vtex

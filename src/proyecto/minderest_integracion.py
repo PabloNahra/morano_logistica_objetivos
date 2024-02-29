@@ -13,6 +13,7 @@ El archivo resultante lo tiene que subir a un FTP
 En la misma carpeta (usando un subdirectorio) desde donde leyó el Excel.
 El proceso se tiene que poder ejecutar desde una tarea de Windows. Dejarlo en el servidor 10.10.29.223
 '''
+
 import config
 import funciones_generales
 import funciones_vtex
@@ -27,44 +28,55 @@ try:
 	# Tomar excel de SKU a integrar
 	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista(config.archivo_skus_integrar)
 
+	# PRUEBA
+	# lista_sku = [{'SKU': 'APPMM9F3LEA'}]
+
 	# Recorremos los SKU
 	for sku in lista_sku:
-		sku_datos_ordenados = {}
+		try:
+			sku_datos_ordenados = {}
 
-		# Leer datos de SKU de VTEX
-		info_vtex_sku = funciones_vtex.vtex_sku_by_ref_id(sku=sku['SKU'])
+			# Leer datos de SKU de VTEX
+			info_vtex_sku = funciones_vtex.vtex_sku_by_ref_id(sku=sku['SKU'])
 
-		# Leer datos de SKU de iPoint
-		info_sku_ipoint = funciones_ipoint.ipoint_by_sku_sql(sql_server=config.sql_server_ipoint,
-		                                    sql_db=config.sql_db_ipoint,
-		                                    sql_user=config.sql_user_ipoint,
-		                                    sql_pass=config.sql_pass_ipoint,
-		                                    sku=sku['SKU'])
+			# Leer datos de SKU de iPoint
+			info_sku_ipoint = funciones_ipoint.ipoint_by_sku_sql(sql_server=config.sql_server_ipoint,
+			                                    sql_db=config.sql_db_ipoint,
+			                                    sql_user=config.sql_user_ipoint,
+			                                    sql_pass=config.sql_pass_ipoint,
+			                                    sku=sku['SKU'])
 
-		sku_datos_ordenados = {
-			'ID': info_sku_ipoint['ID'],
-			'URL': info_vtex_sku['URL'],
-			'NAME': info_vtex_sku['NAME'],
-			'EAN': info_sku_ipoint['EAN'],
-			'PRICE': round(float(Decimal(info_sku_ipoint['PRICE'])), 2),
-			'PRICE_BEFORE_OFFER': 0,
-			'COST': 0,
-			'CURRENCY': "ARS",
-			'VAT': info_sku_ipoint['VAT'],
-			'STOCK': 0,
-			'URL_IMAGE': info_vtex_sku['URL_IMAGE'],
-			'BRAND': info_sku_ipoint['BRAND'],
-			'OWN_BRAND': "",
-			'OWN_BRAND_COMP': "",
-			'MPN': info_sku_ipoint['MPN'],
-			'CATEGORY': ">".join([value for key, value in info_vtex_sku['CATEGORY'].items()]),
-			'TAG': "",
-			'SHIPPING_COST': 0,
-			'UNIT': "UNIDAD",
-			'VALUE': 1
-		}
+			sku_datos_ordenados = {
+				'ID': info_sku_ipoint['ID'],
+				'URL': info_vtex_sku['URL'],
+				'NAME': info_vtex_sku['NAME'],
+				'EAN': info_sku_ipoint['EAN'],
+				'PRICE': round(float(Decimal(info_sku_ipoint['PRICE'])), 2) * ((100 + info_sku_ipoint['VAT']) / 100),
+				'PRICE_BEFORE_OFFER': 0,
+				'COST': 0,
+				'CURRENCY': "ARS",
+				'VAT': info_sku_ipoint['VAT'],
+				'STOCK': 0,
+				'URL_IMAGE': info_vtex_sku['URL_IMAGE'],
+				'BRAND': info_sku_ipoint['BRAND'],
+				'OWN_BRAND': "",
+				'OWN_BRAND_COMP': "",
+				'MPN': info_sku_ipoint['MPN'],
+				'CATEGORY': ">".join([value for key, value in info_vtex_sku['CATEGORY'].items()]),
+				'TAG': info_vtex_sku['TAG'],
+				'SHIPPING_COST': 0,
+				'UNIT': "UNIDAD",
+				'VALUE': 1
+			}
 
-		sku_lista_exportar.append(sku_datos_ordenados)
+			sku_lista_exportar.append(sku_datos_ordenados)
+
+		except Exception as e:
+			funciones_generales.log_grabar(f'ERROR - SKU: {sku["SKU"]} - Exception: {e}', config.dir_log)
+
+			if hasattr(e, 'message'):
+				funciones_generales.log_grabar(f'ERROR - SKU: {sku["SKU"]} - Message: {e.message}', config.dir_log)
+			continue  # Continuar con el siguiente SKU después de manejar la excepción
 
 	# Generar archivo de salida para subir al FTP
 	funciones_generales.exportacion_archivo(sku_lista_exportar, config.nombre_archivo_exportar,

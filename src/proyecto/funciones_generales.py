@@ -121,7 +121,7 @@ def exportacion_archivo(lista_diccionarios, nombre_archivo,
 	# Exportar el DataFrame a un archivo CSV o Excel según el tipo de archivo especificado
 	if tipo_archivo == 'csv':
 		archivo += ".csv"
-		df.to_csv(archivo, index=False)
+		df.to_csv(archivo, index=False, sep=';')
 	elif tipo_archivo == 'excel':
 		archivo += ".xlsx"
 		df.to_excel(archivo, index=False)
