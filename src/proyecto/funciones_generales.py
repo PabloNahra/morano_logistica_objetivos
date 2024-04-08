@@ -179,11 +179,34 @@ def envio_mail(mail_from, mail_to, mail_subject, mail_attachment, mail_content):
 	return
 
 
-
+'''
 def subir_archivo_ftp(server, user, password, archivo_local, archivo_remoto):
     try:
         # Conectarse al servidor FTP
         ftp = FTP(server)
+        ftp.login(user, password)
+
+        # Subir el archivo al servidor FTP
+        with open(archivo_local, 'rb') as archivo:
+            ftp.storbinary(f'STOR {archivo_remoto}', archivo)
+
+        print(f"El archivo {archivo_local} se ha subido correctamente a {archivo_remoto} en el servidor FTP.")
+
+    except Exception as e:
+        print(f"Ocurrió un error al subir el archivo al servidor FTP: {e}")
+
+    finally:
+        # Cerrar la conexión FTP
+        ftp.quit()
+'''
+
+from ftplib import FTP
+
+def subir_archivo_ftp(server, port, user, password, archivo_local, archivo_remoto):
+    try:
+        # Conectarse al servidor FTP
+        ftp = FTP()
+        ftp.connect(server, port)
         ftp.login(user, password)
 
         # Subir el archivo al servidor FTP

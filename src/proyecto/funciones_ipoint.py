@@ -28,7 +28,7 @@ def ipoint_by_sku_sql(sql_server, sql_db, sql_user, sql_pass, sku=''):
 	      "FROM ALL_SKU_INFO_CON_CATEGORIAS " \
 	      "WHERE " \
 	      f"Codigo_Interno = '{sku}' AND " \
-	      "Val_Cat_PRD_ID_CAT_PROD = 3"
+	      "Val_Cat_PRD_ID_CAT_PROD = 3 "
 	# "--Codigo_Interno <> Codigo_Barras AND " \
 
 	cursor = conexion.cursor().execute(sql)

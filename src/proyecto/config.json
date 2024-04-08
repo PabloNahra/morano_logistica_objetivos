@@ -21,9 +21,9 @@
     "mail_subject": "INCONVENIENTE: Integracion Minderest"
   },
   "ftp": {
-    "server_ftp": "54.245.133.116",
-    "user_ftp": "sftp-user",
-    "password_ftp": "L1EtoN90JKuLkSow"
+    "server_ftp": "201.216.210.161",
+    "user_ftp": "ftpminderest",
+    "password_ftp": "%Mind_Ftp..2024"
   },
   "parametros_negocio": {
     "archivo_skus_integrar": "SKU_integrar",
