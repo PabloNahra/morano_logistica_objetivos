@@ -23,6 +23,10 @@ sql_db_ipoint = json_data['cred_SQL_ipoint']['sql_db_ipoint']
 sql_user_ipoint = json_data['cred_SQL_ipoint']['sql_user_ipoint']
 sql_pass_ipoint = json_data['cred_SQL_ipoint']['sql_pass_ipoint']
 
+# Directorio de red
+copiar_direc_red = json_data['directorio_red']['copiar_direc_red']
+directorio_red = json_data['directorio_red']['directorio_red']
+
 # Configuracion de envio de mails
 email_smtp = json_data['envio_mail']['email_smtp']
 email_port = json_data['envio_mail']['email_port']
@@ -33,7 +37,9 @@ mail_to = json_data['envio_mail']['mail_to']
 mail_subject = json_data['envio_mail']['mail_subject']
 
 # FTP de subida
+subir_ftp = json_data['ftp']['subir_ftp']
 server_ftp = json_data['ftp']['server_ftp']
+port_ftp = json_data['ftp']['port_ftp']
 user_ftp = json_data['ftp']['user_ftp']
 password_ftp = json_data['ftp']['password_ftp']
 

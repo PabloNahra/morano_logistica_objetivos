@@ -11,6 +11,10 @@
     "sql_user_ipoint":  "sistemas",
     "sql_pass_ipoint": "Oblongo2020%"
   },
+  "directorio_red": {
+    "copiar_direc_red": 1,
+    "directorio_red": "\\\\10.10.29.89\\srvftp\\minderest"
+  },
   "envio_mail": {
     "email_smtp": "mail.satrendy.net",
     "email_port": "587",
@@ -21,7 +25,9 @@
     "mail_subject": "INCONVENIENTE: Integracion Minderest"
   },
   "ftp": {
+    "subir_ftp": 0,
     "server_ftp": "201.216.210.161",
+    "port_ftp": 3021,
     "user_ftp": "ftpminderest",
     "password_ftp": "%Mind_Ftp..2024"
   },

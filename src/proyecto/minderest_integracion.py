@@ -79,7 +79,7 @@ try:
 			continue  # Continuar con el siguiente SKU después de manejar la excepción
 
 	# Generar archivo de salida para subir al FTP
-	funciones_generales.exportacion_archivo(sku_lista_exportar, config.nombre_archivo_exportar,
+	file_to_ftp = funciones_generales.exportacion_archivo(sku_lista_exportar, config.nombre_archivo_exportar,
 	                                        incl_fecha=0, tipo_archivo=config.tipo_archivo_exportar,
 	                                        directorio=config.dir_archivo)
 
@@ -88,14 +88,29 @@ try:
 	                                        incl_fecha=1, tipo_archivo=config.tipo_archivo_exportar,
 	                                        directorio=config.dir_archivo_historial)
 
+	# Envio el archivo al directorio de RED que se publica por FTP
+	# Codeo los valores para la conexión de red
+	user = "SAT\\administrador"
+	password = "Octaedro2020%"
+
+	if config.copiar_direc_red == 1:
+		funciones_generales.copiar_archivo_a_red(archivo_local=file_to_ftp,
+		                                         directorio_red=config.directorio_red,
+	                                             usuario=user,
+	                                             contrasena=password)
+
+
+
 	# Subir archivo a FTP
-	funciones_generales.subir_archivo_ftp(server=config.server_ftp,
+	if config.subir_ftp == 1:
+		funciones_generales.subir_archivo_ftp(server=config.server_ftp,
+	                                      port=config.port_ftp,
 	                                      user=config.user_ftp,
 	                                      password=config.password_ftp,
 	                                      archivo_local=f"{config.dir_archivo}//"
 	                                                    f"{config.nombre_archivo_exportar}."
 	                                                    f"{config.tipo_archivo_exportar}" ,
-	                                      archivo_remoto=f"{config.nombre_archivo_exportar}."
+	                                          archivo_remoto=f"{config.nombre_archivo_exportar}."
 	                                                    f"{config.tipo_archivo_exportar}")
 
 

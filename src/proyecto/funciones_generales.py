@@ -5,6 +5,8 @@ from email.message import EmailMessage
 import pandas as pd
 import os
 from ftplib import FTP
+import subprocess
+
 
 
 def obtener_hora_actual():
@@ -52,36 +54,10 @@ def leer_excel_y_convertir_a_lista(nombre_archivo_excel):
 		print(f"Error: {e}")
 		return None
 
-def exportacion_excel_old(lista_diccionarios, nombre_archivo_excel, campo_orden=None,incl_fecha=0):
-	# Crear un DataFrame a partir de la lista de diccionarios
-	df = pd.DataFrame(lista_diccionarios)
-
-	# Ordenar la lista si se proporciona un campo de orden
-	if campo_orden:
-		if campo_orden in df.columns:
-			df = df.sort_values(by=campo_orden)
-	else:
-		# Si campo_orden es None, ordenar por la primera clave del primer diccionario
-		if lista_diccionarios:
-			primer_diccionario = lista_diccionarios[0]
-			primer_clave = list(primer_diccionario.keys())[0]
-			df = df.sort_values(by=primer_clave)
-
-	# Agregar fecha y hora al nombre del archivo si incl_fecha es 1
-	if incl_fecha == 1:
-		fecha_hora_actual = hora.now().strftime('%Y_%m_%d_%H_%M_%S')
-		archivo = f"{nombre_archivo_excel}_{fecha_hora_actual}.xlsx"
-	else:
-		archivo = f"{nombre_archivo_excel}.xlsx"
-
-	# Exportar el DataFrame a un archivo Excel
-	df.to_excel(archivo, index=False)
-
-	return
-
 def exportacion_archivo(lista_diccionarios, nombre_archivo,
                         campo_orden=None, incl_fecha=False,
-                        tipo_archivo='excel', directorio=None):
+                        tipo_archivo='excel', directorio=None,
+                        user=None, password=None, server=None, share=None):
 	'''
 	:param lista_diccionarios:
 	:param nombre_archivo:
@@ -90,6 +66,7 @@ def exportacion_archivo(lista_diccionarios, nombre_archivo,
 	:param tipo_archivo: 'excel' o 'csv'
 	:return:
 	'''
+
 	# Crear un DataFrame a partir de la lista de diccionarios
 	df = pd.DataFrame(lista_diccionarios)
 
@@ -179,29 +156,6 @@ def envio_mail(mail_from, mail_to, mail_subject, mail_attachment, mail_content):
 	return
 
 
-'''
-def subir_archivo_ftp(server, user, password, archivo_local, archivo_remoto):
-    try:
-        # Conectarse al servidor FTP
-        ftp = FTP(server)
-        ftp.login(user, password)
-
-        # Subir el archivo al servidor FTP
-        with open(archivo_local, 'rb') as archivo:
-            ftp.storbinary(f'STOR {archivo_remoto}', archivo)
-
-        print(f"El archivo {archivo_local} se ha subido correctamente a {archivo_remoto} en el servidor FTP.")
-
-    except Exception as e:
-        print(f"Ocurrió un error al subir el archivo al servidor FTP: {e}")
-
-    finally:
-        # Cerrar la conexión FTP
-        ftp.quit()
-'''
-
-from ftplib import FTP
-
 def subir_archivo_ftp(server, port, user, password, archivo_local, archivo_remoto):
     try:
         # Conectarse al servidor FTP
@@ -222,3 +176,6 @@ def subir_archivo_ftp(server, port, user, password, archivo_local, archivo_remot
         # Cerrar la conexión FTP
         ftp.quit()
 
+def copiar_archivo_a_red(archivo_local, directorio_red, usuario, contrasena):
+    comando = f'net use {directorio_red} /user:{usuario} {contrasena} && copy "{archivo_local}" "{directorio_red}"'
+    subprocess.run(comando, shell=True)
