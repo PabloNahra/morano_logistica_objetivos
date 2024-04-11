@@ -29,7 +29,7 @@ try:
 	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista(config.archivo_skus_integrar)
 
 	# PRUEBA
-	# lista_sku = [{'SKU': 'APPMM9F3LEA'}]
+	# lista_sku = [{'SKU': 'CAL36024ARA'}]
 
 	# Recorremos los SKU
 	for sku in lista_sku:
