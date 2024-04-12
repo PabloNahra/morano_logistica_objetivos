@@ -4,7 +4,7 @@ from pathlib import Path
 import json
 
 # Levanto las configuraciones del archivo .json
-with open('config.json', 'r') as file:
+with open('config_minderest.json', 'r') as file:
     # Lee el contenido del archivo JSON
     json_data = json.load(file)
 
