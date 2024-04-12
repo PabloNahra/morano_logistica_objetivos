@@ -13,23 +13,28 @@ El archivo resultante lo tiene que subir a un FTP
 En la misma carpeta (usando un subdirectorio) desde donde leyó el Excel.
 El proceso se tiene que poder ejecutar desde una tarea de Windows. Dejarlo en el servidor 10.10.29.223
 '''
-
+import os
 import config
 import funciones_generales
 import funciones_vtex
 import funciones_ipoint
 from decimal import Decimal
 
+
 try:
 	funciones_generales.log_grabar('Minderest - Integracion - Inicio', config.dir_log)
 
 	sku_lista_exportar = []
 
+	# archivo de lista de SKU
+	# archivo_lista_sku = config.dir_sku_lista + config.archivo_skus_integrar
+	ruta_archivo = os.path.join(config.dir_sku_lista, config.archivo_skus_integrar)
+
 	# Tomar excel de SKU a integrar
-	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista(config.archivo_skus_integrar)
+	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo)
 
 	# PRUEBA
-	# lista_sku = [{'SKU': 'CAL36024ARA'}]
+	lista_sku = [{'SKU': 'CAL36024ARA'}]
 
 	# Recorremos los SKU
 	for sku in lista_sku:

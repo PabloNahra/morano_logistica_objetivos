@@ -2,6 +2,7 @@
   "generales": {
     "timezone": "America/Argentina/Buenos_Aires",
     "directorio_log": "minderest_int_log.txt",
+    "directorio_sku_lista": "C:\\mis_entornos\\minderest\\src\\proyecto",
     "directorio_archivo": "C:\\Temporal\\Minderest",
     "directorio_archivo_historial": "C:\\Temporal\\Minderest\\Historial"
   },
