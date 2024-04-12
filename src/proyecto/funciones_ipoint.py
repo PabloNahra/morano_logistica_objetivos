@@ -96,18 +96,22 @@ def ipoint_by_sku_sql(sql_server, sql_db, sql_user, sql_pass, sku=''):
 		# Consulto los datos del SKU en iPoint
 		sku_info_ipoint_categorias = {}
 
-		sql = "SELECT " \
-		      "Codigo_Interno AS ID, " \
-		      "Codigo_Barras AS EAN, " \
-		      "Impuesto_Tasa AS VAT, " \
-		      "Val_Cat_PRD_VALOR AS BRAND, " \
-		      "Codigo_Interno AS MPN, " \
-		      "ID_SKU_Empresa AS id_ipoint " \
-		      "FROM ALL_SKU_INFO_CON_CATEGORIAS " \
-		      "WHERE " \
-		      f"Codigo_Interno = '{sku}' AND " \
-		      "Val_Cat_PRD_ID_CAT_PROD = 3 "
-		# "--Codigo_Interno <> Codigo_Barras AND " \
+		sql = "SELECT DISTINCT " \
+		       "Producto.Codigo_Interno AS ID, " \
+		       "ISNULL(Codigo_Barra.Codigo_Barras, '') AS EAN,  " \
+		       "ISNULL(Impuesto.Tasa, '') AS VAT, " \
+		       "isnull(Valor_Categoria.Valor, '') AS BRAND, " \
+		       "Producto.Codigo_Interno AS MPN, " \
+		       "ISNULL(SKU_Empresa.ID_SKU_Empresa, '') AS id_ipoint " \
+		       "FROM Producto " \
+		       "LEFT JOIN SKU ON Producto.ID_Producto = SKU.ID_Producto " \
+		       "LEFT JOIN SKU_Empresa ON SKU.ID_SKU = SKU_Empresa.ID_SKU " \
+		       "LEFT JOIN Codigo_Barra ON SKU_Empresa.ID_SKU_Empresa = Codigo_Barra.ID_SKU_Empresa AND Codigo_Barra.Es_Interno = 0 " \
+		       "LEFT JOIN Producto_Empresa ON SKU_Empresa.ID_Producto_Empresa = Producto_Empresa.ID_Producto_Empresa " \
+		       "LEFT JOIN Impuesto ON Producto_Empresa.ID_Impuesto = Impuesto.ID_Impuesto " \
+		       "LEFT JOIN SKU_Valores_Asignados ON SKU.ID_SKU  = SKU_Valores_Asignados.ID_SKU " \
+		       "LEFT JOIN Valor_Categoria ON SKU_Valores_Asignados.ID_Valor_Categoria = Valor_Categoria.ID_Valor_Categoria " \
+		       f"WHERE Producto.Codigo_Interno = '{sku}'"
 
 		cursor = conexion.cursor().execute(sql)
 		row = cursor.fetchone()
