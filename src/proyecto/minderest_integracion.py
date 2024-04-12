@@ -51,7 +51,10 @@ try:
 				'URL': info_vtex_sku['URL'],
 				'NAME': info_vtex_sku['NAME'],
 				'EAN': info_sku_ipoint['EAN'],
-				'PRICE': round(float(Decimal(info_sku_ipoint['PRICE'])), 2) * ((100 + info_sku_ipoint['VAT']) / 100),
+				'PRICE': round(
+					round(float(Decimal(info_sku_ipoint['PRICE'])), 2) *
+					((100 + info_sku_ipoint['VAT']) / 100),
+					0),
 				'PRICE_BEFORE_OFFER': 0,
 				'COST': 0,
 				'CURRENCY': "ARS",
