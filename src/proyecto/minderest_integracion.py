@@ -34,7 +34,7 @@ try:
 	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo)
 
 	# PRUEBA
-	lista_sku = [{'SKU': 'CAL36024ARA'}]
+	# lista_sku = [{'SKU': 'CAL36024ARA'}]
 
 	# Recorremos los SKU
 	for sku in lista_sku:
