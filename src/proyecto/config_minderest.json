@@ -2,7 +2,7 @@
   "generales": {
     "timezone": "America/Argentina/Buenos_Aires",
     "directorio_log": "minderest_int_log.txt",
-    "directorio_sku_lista": "C:\\mis_entornos\\minderest\\src\\proyecto",
+    "directorio_sku_lista": "C:\\Temporal\\Minderest",
     "directorio_archivo": "C:\\Temporal\\Minderest",
     "directorio_archivo_historial": "C:\\Temporal\\Minderest\\Historial"
   },
@@ -34,7 +34,8 @@
   },
   "parametros_negocio": {
     "archivo_skus_integrar": "SKU_integrar",
-    "lista_precios_ipoint_id": 4,
+    "lista_precios_ipoint_id_PRICE_BEFORE_OFFER": 2,
+    "lista_precios_ipoint_id_PRICE": 10,
     "nombre_archivo_exportar": "sku_integrar",
     "tipo_archivo_exportar": "csv"
   }

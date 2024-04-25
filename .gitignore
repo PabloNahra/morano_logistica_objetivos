@@ -7,3 +7,5 @@
 /src/proyecto/prueba_ftp.py
 /src/proyecto/prueba_subirftp.py
 /src/proyecto/prueba_copiar_a_red.py
+/src/proyecto/dist/
+/src/proyecto/build/

@@ -47,6 +47,7 @@ password_ftp = json_data['ftp']['password_ftp']
 
 # Parametros de negocio
 archivo_skus_integrar = json_data['parametros_negocio']['archivo_skus_integrar']
-lista_precios_ipoint_id = json_data['parametros_negocio']['lista_precios_ipoint_id']
+lista_precios_ipoint_id_PRICE_BEFORE_OFFER = json_data['parametros_negocio']['lista_precios_ipoint_id_PRICE_BEFORE_OFFER']
+lista_precios_ipoint_id_PRICE = json_data['parametros_negocio']['lista_precios_ipoint_id_PRICE']
 nombre_archivo_exportar = json_data['parametros_negocio']['nombre_archivo_exportar']
 tipo_archivo_exportar = json_data['parametros_negocio']['tipo_archivo_exportar']

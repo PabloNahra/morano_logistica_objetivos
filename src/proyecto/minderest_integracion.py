@@ -35,6 +35,7 @@ try:
 
 	# PRUEBA
 	# lista_sku = [{'SKU': 'CAL36024ARA'}]
+	lista_sku = [{'SKU': 'SMA145MLGEARO'}]
 
 	# Recorremos los SKU
 	for sku in lista_sku:
@@ -60,7 +61,10 @@ try:
 					round(float(Decimal(info_sku_ipoint['PRICE'])), 2) *
 					((100 + info_sku_ipoint['VAT']) / 100),
 					0),
-				'PRICE_BEFORE_OFFER': 0,
+				'PRICE_BEFORE_OFFER': round(
+					round(float(Decimal(info_sku_ipoint['PRICE_BEFORE_OFFER'])), 2) *
+					((100 + info_sku_ipoint['VAT']) / 100),
+					0),
 				'COST': 0,
 				'CURRENCY': "ARS",
 				'VAT': info_sku_ipoint['VAT'],
