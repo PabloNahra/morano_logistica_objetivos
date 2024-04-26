@@ -41,7 +41,7 @@ try:
 
 	# PRUEBA
 	# lista_sku = [{'SKU': 'CAL36024ARA'}]
-	lista_sku = [{'SKU': 'SMA145MLGEARO'}]
+	# lista_sku = [{'SKU': 'SMA145MLGEARO'}]
 
 	# Recorremos los SKU
 	for sku in lista_sku:
