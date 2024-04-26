@@ -23,7 +23,7 @@ def ipoint_genero_stock_sql(sql_server, sql_db, sql_user, sql_pass):
         cursor = conexion.cursor()
 
         # Ejecutar el procedimiento almacenado para generar los datos en ##datos
-        sql_sp = "EXEC [dbo].SAT_Reporte_Stock_Integral_PN_Swatch @marca = '', @division = '', @solo_web = ''"
+        sql_sp = "EXEC [dbo].SAT_Reporte_Stock_Integral_PN_Swatch @marca = '', @division = '', @solo_web = 'SI'"
         cursor.execute(sql_sp)
 
         # Truncate table de datos de stock
@@ -36,7 +36,7 @@ def ipoint_genero_stock_sql(sql_server, sql_db, sql_user, sql_pass):
                       f"select codigo AS SKU, "
                       f"sum(stock_disponible) as Stock "
                       f"from ##datos "
-                      f"WHERE comparte_web = 'Comparte WEB' GROUP BY codigo")
+                      f"GROUP BY codigo")
         cursor.execute(sql_insert)
 
         # Hacer commit para confirmar la inserción en la base de datos
@@ -74,7 +74,8 @@ def ipoint_by_sku_sql(sql_server, sql_db, sql_user, sql_pass, sku=''):
 		       "ISNULL(Impuesto.Tasa, '') AS VAT, " \
 		       "isnull(Valor_Categoria.Valor, '') AS BRAND, " \
 		       "Producto.Codigo_Interno AS MPN, " \
-		       "ISNULL(SKU_Empresa.ID_SKU_Empresa, '') AS id_ipoint " \
+		       "ISNULL(SKU_Empresa.ID_SKU_Empresa, '') AS id_ipoint, " \
+		       "CASE WHEN ISNULL(stk.Stock, 0) < 0 THEN 0 ELSE ISNULL(stk.Stock, 0) END AS STOCK " \
 		       "FROM Producto " \
 		       "LEFT JOIN SKU ON Producto.ID_Producto = SKU.ID_Producto " \
 		       "LEFT JOIN SKU_Empresa ON SKU.ID_SKU = SKU_Empresa.ID_SKU " \
@@ -83,6 +84,7 @@ def ipoint_by_sku_sql(sql_server, sql_db, sql_user, sql_pass, sku=''):
 		       "LEFT JOIN Impuesto ON Producto_Empresa.ID_Impuesto = Impuesto.ID_Impuesto " \
 		       "LEFT JOIN SKU_Valores_Asignados ON SKU.ID_SKU  = SKU_Valores_Asignados.ID_SKU " \
 		       "LEFT JOIN Valor_Categoria ON SKU_Valores_Asignados.ID_Valor_Categoria = Valor_Categoria.ID_Valor_Categoria " \
+		       f"LEFT JOIN {config.tabla_stock_aux} AS stk ON Producto.Codigo_Interno = stk.sku " \
 		       f"WHERE Producto.Codigo_Interno = '{sku}'"
 
 		cursor = conexion.cursor().execute(sql)

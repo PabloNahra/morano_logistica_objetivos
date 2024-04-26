@@ -74,7 +74,7 @@ try:
 				'COST': 0,
 				'CURRENCY': "ARS",
 				'VAT': info_sku_ipoint['VAT'],
-				'STOCK': 0,
+				'STOCK': round(float(Decimal(info_sku_ipoint['STOCK'])), 0),
 				'URL_IMAGE': info_vtex_sku['URL_IMAGE'],
 				'BRAND': info_sku_ipoint['BRAND'],
 				'OWN_BRAND': "",
