@@ -10,7 +10,8 @@
     "sql_server_ipoint": "10.10.29.200",
     "sql_db_ipoint": "iPoint_Prod",
     "sql_user_ipoint":  "sistemas",
-    "sql_pass_ipoint": "Oblongo2020%"
+    "sql_pass_ipoint": "Oblongo2020%",
+    "tabla_stock_aux": "SAT_tblPN_Minderest_Stock_Aux"
   },
   "directorio_red": {
     "copiar_direc_red": 1,

@@ -1,6 +1,54 @@
 import pyodbc
 import config
 
+import pyodbc
+
+import pyodbc
+
+def ipoint_genero_stock_sql(sql_server, sql_db, sql_user, sql_pass):
+    '''
+    Utilizar un SP para generar el stock y luego tomarlo para informar si el SKU tiene stock o no
+    :return:
+    Generación de tabla SQL con el stock total por SKU
+    '''
+
+    try:
+        # Conecto con SQL
+        conexion = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}'
+                                  ';SERVER=' + sql_server +
+                                  ';DATABASE=' + sql_db +
+                                  ';UID=' + sql_user +
+                                  ';PWD=' + sql_pass)
+
+        cursor = conexion.cursor()
+
+        # Ejecutar el procedimiento almacenado para generar los datos en ##datos
+        sql_sp = "EXEC [dbo].SAT_Reporte_Stock_Integral_PN_Swatch @marca = '', @division = '', @solo_web = ''"
+        cursor.execute(sql_sp)
+
+        # Truncate table de datos de stock
+        sql_truncate = f"TRUNCATE TABLE {config.tabla_stock_aux}"
+        cursor.execute(sql_truncate)
+
+        # Realizar un insert masivo desde ##datos a otra tabla
+        sql_insert = (f"INSERT INTO {config.tabla_stock_aux} "
+                      f"(SKU, Stock) "
+                      f"select codigo AS SKU, "
+                      f"sum(stock_disponible) as Stock "
+                      f"from ##datos "
+                      f"WHERE comparte_web = 'Comparte WEB' GROUP BY codigo")
+        cursor.execute(sql_insert)
+
+        # Hacer commit para confirmar la inserción en la base de datos
+        conexion.commit()
+
+        # Cerrar conexión
+        conexion.close()
+
+    except Exception as e:
+        print("Error:", e)
+
+
 def ipoint_by_sku_sql(sql_server, sql_db, sql_user, sql_pass, sku=''):
 	'''
 	Leer datos de distintas vistas y tablas de iPoint a partir de un SKU

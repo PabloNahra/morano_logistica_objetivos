@@ -33,6 +33,12 @@ try:
 	# Tomar excel de SKU a integrar
 	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo)
 
+	# Generar el auxiliar de stock de ipoint
+	funciones_ipoint.ipoint_genero_stock_sql(sql_server=config.sql_server_ipoint,
+	                                         sql_db=config.sql_db_ipoint,
+	                                         sql_user=config.sql_user_ipoint,
+	                                         sql_pass=config.sql_pass_ipoint)
+
 	# PRUEBA
 	# lista_sku = [{'SKU': 'CAL36024ARA'}]
 	lista_sku = [{'SKU': 'SMA145MLGEARO'}]

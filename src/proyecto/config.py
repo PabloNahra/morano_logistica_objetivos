@@ -23,6 +23,7 @@ sql_server_ipoint = json_data['cred_SQL_ipoint']['sql_server_ipoint']
 sql_db_ipoint = json_data['cred_SQL_ipoint']['sql_db_ipoint']
 sql_user_ipoint = json_data['cred_SQL_ipoint']['sql_user_ipoint']
 sql_pass_ipoint = json_data['cred_SQL_ipoint']['sql_pass_ipoint']
+tabla_stock_aux = json_data['cred_SQL_ipoint']['tabla_stock_aux']
 
 # Directorio de red
 copiar_direc_red = json_data['directorio_red']['copiar_direc_red']
