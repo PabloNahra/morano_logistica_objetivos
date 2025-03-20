@@ -25,44 +25,44 @@ def log_grabar(texto, dir_log):
 
     return 0
 
-def leer_excel_y_convertir_a_lista(nombre_archivo_excel):
 
-	nombre_archivo = nombre_archivo_excel + ".xlsx"
 
-	try:
-		# Leer el archivo Excel
-		df = pd.read_excel(nombre_archivo)
+def leer_excel_y_convertir_a_lista(nombre_archivo_excel, titulo=0, datos=1):
+    """
+    Lee un archivo Excel y lo convierte en una lista de diccionarios.
 
-		# Inicializar una lista para almacenar los diccionarios
-		lista_resultante = []
+    :param nombre_archivo_excel: Nombre del archivo Excel (sin extensión)
+    :param titulo: Número de fila donde se encuentran los títulos (base 0)
+    :param datos: Número de fila donde comienzan los datos (base 0)
+    :return: Lista de diccionarios con los datos del Excel o None en caso de error.
+    """
+    nombre_archivo = nombre_archivo_excel + ".xlsx"
 
-		# Iterar sobre las filas del DataFrame
-		for indice, fila in df.iterrows():
-			# Convertir cada fila a un diccionario
-			diccionario = fila.to_dict()
+    try:
+        # Leer el archivo Excel con la fila de títulos y saltando las filas innecesarias
+        df = pd.read_excel(nombre_archivo, header=titulo, skiprows=range(0, datos))
 
-			# Agregar el diccionario a la lista
-			lista_resultante.append(diccionario)
+        # Convertir el DataFrame en una lista de diccionarios
+        lista_resultante = df.to_dict(orient="records")
 
-		# Devolver la lista de diccionarios
-		return lista_resultante
+        return lista_resultante
 
-	except FileNotFoundError:
-		print(f"Error: No se pudo encontrar el archivo {nombre_archivo}")
-		return None
-	except Exception as e:
-		print(f"Error: {e}")
-		return None
+    except FileNotFoundError:
+        print(f"Error: No se pudo encontrar el archivo {nombre_archivo}")
+        return None
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
 
 def exportacion_archivo(lista_diccionarios, nombre_archivo,
                         campo_orden=None, incl_fecha=False,
                         tipo_archivo='excel', directorio=None,
                         user=None, password=None, server=None, share=None):
 	'''
-	:param lista_diccionarios:
-	:param nombre_archivo:
-	:param campo_orden:
-	:param incl_fecha:
+	:param lista_diccionarios: Cada diccionario es un registro
+	:param nombre_archivo: Nombre al exportar el archivo
+	:param campo_orden: Campo por el que se ordenarán los registros
+	:param incl_fecha: Si el nombre del archivo va a incluir o no la fecha de generacion del mismo
 	:param tipo_archivo: 'excel' o 'csv'
 	:return:
 	'''
@@ -154,27 +154,6 @@ def envio_mail(mail_from, mail_to, mail_subject, mail_attachment, mail_content):
 	server.quit()
 
 	return
-
-
-def subir_archivo_ftp(server, port, user, password, archivo_local, archivo_remoto):
-    try:
-        # Conectarse al servidor FTP
-        ftp = FTP()
-        ftp.connect(server, port)
-        ftp.login(user, password)
-
-        # Subir el archivo al servidor FTP
-        with open(archivo_local, 'rb') as archivo:
-            ftp.storbinary(f'STOR {archivo_remoto}', archivo)
-
-        print(f"El archivo {archivo_local} se ha subido correctamente a {archivo_remoto} en el servidor FTP.")
-
-    except Exception as e:
-        print(f"Ocurrió un error al subir el archivo al servidor FTP: {e}")
-
-    finally:
-        # Cerrar la conexión FTP
-        ftp.quit()
 
 def copiar_archivo_a_red(archivo_local, directorio_red, usuario, contrasena):
     comando = f'net use {directorio_red} /user:{usuario} {contrasena} && copy "{archivo_local}" "{directorio_red}"'

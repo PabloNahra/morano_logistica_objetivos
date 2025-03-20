@@ -1,16 +1,16 @@
 {
   "generales": {
     "timezone": "America/Argentina/Buenos_Aires",
-    "directorio_log": "minderest_int_log.txt",
-    "directorio_sku_lista": "C:\\Temporal\\Minderest",
+    "directorio_log": "logistica_int_log.txt",
+    "directorio_lista_entrega": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos",
     "directorio_archivo": "C:\\Temporal\\Minderest",
     "directorio_archivo_historial": "C:\\Temporal\\Minderest\\Historial"
   },
-  "cred_SQL_ipoint": {
-    "sql_server_ipoint": "10.10.29.200",
-    "sql_db_ipoint": "iPoint_Prod",
-    "sql_user_ipoint":  "sistemas",
-    "sql_pass_ipoint": "Oblongo2020%",
+  "cred_SQL_bejerman": {
+    "sql_server_sb": "10.10.29.200",
+    "sql_db_sb": "iPoint_Prod",
+    "sql_user_sb":  "sistemas",
+    "sql_pass_sb": "Oblongo2020%",
     "tabla_stock_aux": "SAT_tblPN_Minderest_Stock_Aux"
   },
   "directorio_red": {
@@ -34,7 +34,7 @@
     "password_ftp": "%Mind_Ftp..2024"
   },
   "parametros_negocio": {
-    "archivo_skus_integrar": "SKU_integrar",
+    "archivo_entrega": "Entregas",
     "lista_precios_ipoint_id_PRICE_BEFORE_OFFER": 2,
     "lista_precios_ipoint_id_PRICE": 10,
     "nombre_archivo_exportar": "sku_integrar",

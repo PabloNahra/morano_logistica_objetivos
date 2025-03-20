@@ -1,17 +1,10 @@
 '''
-Fecha: 2024-02-19
+Fecha: 2025-03-20
 Autor: Pablo Nahra
 Objetivo:
-Usando las APIs de VTEX puede tomar la información de la plataforma y luego tomar el resto de la información de iPoint
-La APP tiene que tener como INPUT los SKU que vamos a querer controlar.. Puede ser un archivo de EXCEL con
-el detalle de los artículos
-A controlar.. Ese Archivo de EXCEL lo tiene que generar el sector de Compras (Sebas Rossi y su equipo) y
-dejarlo en una carpeta compartida del Z:
-La APP tiene que tomar ese EXCEL y generar el archivo para los SKU declarados..
-El archivo resultante lo tiene que subir a un FTP
-(que nos van a asignar dirección usuario y clave) y (por las dudas) dejar una copia
-En la misma carpeta (usando un subdirectorio) desde donde leyó el Excel.
-El proceso se tiene que poder ejecutar desde una tarea de Windows. Dejarlo en el servidor 10.10.29.223
+Proceso backend que al ejecutarse toma un Excel de un directorio y lo procesa para impactar algunos datos de este excel
+en datos adicionales de bejerman
+El Excel posee datos del transporte de envios a clientes
 '''
 import os
 import config_logistica
@@ -22,26 +15,25 @@ from decimal import Decimal
 
 
 try:
-	funciones_generales.log_grabar('Minderest - Integracion - Inicio', config.dir_log)
+	funciones_generales.log_grabar('Logistica Transporte - Integracion - Inicio', config_logistica.dir_log)
 
+	# Toma el Excel del directorio
+	ruta_archivo = os.path.join(config_logistica.dir_lista_entrega, config_logistica.archivo_entrega)
+	lista_entregas = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo, titulo=0, datos=1)
+
+	# Copia datos del excel a tabla intermedia (con número de proceso) - La tabla intermedia en DBReportes
+
+
+	# Con los mismos datos que ya levantó, copia las fechas en el dato adicional de Bejerman
+
+	# Mueve el archivo a procesados o NO procesados
+
+	# Muestra un resumen de lo que ocurrio en el proceso
+
+
+	## CODIGO ANTERIOR
 	sku_lista_exportar = []
 
-	# archivo de lista de SKU
-	# archivo_lista_sku = config.dir_sku_lista + config.archivo_skus_integrar
-	ruta_archivo = os.path.join(config.dir_sku_lista, config.archivo_skus_integrar)
-
-	# Tomar excel de SKU a integrar
-	lista_sku = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo)
-
-	# Generar el auxiliar de stock de ipoint
-	funciones_ipoint.ipoint_genero_stock_sql(sql_server=config.sql_server_ipoint,
-	                                         sql_db=config.sql_db_ipoint,
-	                                         sql_user=config.sql_user_ipoint,
-	                                         sql_pass=config.sql_pass_ipoint)
-
-	# PRUEBA
-	# lista_sku = [{'SKU': 'CAL36024ARA'}]
-	# lista_sku = [{'SKU': 'SMA145MLGEARO'}]
 
 	# Recorremos los SKU
 	for sku in lista_sku:
@@ -90,10 +82,10 @@ try:
 			sku_lista_exportar.append(sku_datos_ordenados)
 
 		except Exception as e:
-			funciones_generales.log_grabar(f'ERROR - SKU: {sku["SKU"]} - Exception: {e}', config.dir_log)
+			funciones_generales.log_grabar(f'ERROR - SKU: {sku["SKU"]} - Exception: {e}', config_logistica.dir_log)
 
 			if hasattr(e, 'message'):
-				funciones_generales.log_grabar(f'ERROR - SKU: {sku["SKU"]} - Message: {e.message}', config.dir_log)
+				funciones_generales.log_grabar(f'ERROR - SKU: {sku["SKU"]} - Message: {e.message}', config_logistica.dir_log)
 			continue  # Continuar con el siguiente SKU después de manejar la excepción
 
 	# Generar archivo de salida para subir al FTP
@@ -111,7 +103,7 @@ try:
 	user = "SAT\\administrador"
 	password = "Octaedro2020%"
 
-	if config.copiar_direc_red == 1:
+	if config_logistica.copiar_direc_red == 1:
 		funciones_generales.copiar_archivo_a_red(archivo_local=file_to_ftp,
 		                                         directorio_red=config.directorio_red,
 	                                             usuario=user,
@@ -133,27 +125,31 @@ try:
 
 
 except Exception as e:
-	funciones_generales.log_grabar(f'ERROR - Termino programa - Exception: {e}', config.dir_log)
-	funciones_generales.envio_mail(config.mail_from, config.mail_to, config.mail_subject, '',
+	funciones_generales.log_grabar(f'ERROR - Termino programa - Exception: {e}', config_logistica.dir_log)
+	funciones_generales.envio_mail(config_logistica.mail_from,
+	                               config_logistica.mail_to,
+	                               config_logistica.mail_subject, '',
 	                               f'Mensaje: {e}')
 	if hasattr(e, 'message'):
-		funciones_generales.log_grabar(f'ERROR - Termino programa - Message: {e.message}', config.dir_log)
-		funciones_generales.envio_mail(config.mail_from, config.mail_to,
-		                               config.mail_subject,
+		funciones_generales.log_grabar(f'ERROR - Termino programa - Message: {e.message}', config_logistica.dir_log)
+		funciones_generales.envio_mail(config_logistica.mail_from, config_logistica.mail_to,
+		                               config_logistica.mail_subject,
 		                               '',
 		                               f'Mensaje: {e.message}')
 except PermissionError as e:
-	funciones_generales.log_grabar(f'ERROR - Termino programa: {e.message}', config.dir_log)
-	funciones_generales.log_grabar('ERROR - Termino programa: Error de acceso a directorio', config.dir_log)
-	funciones_generales.envio_mail(config.mail_from, config.mail_to,
-	                               config.mail_subject,
+	funciones_generales.log_grabar(f'ERROR - Termino programa: {e.message}', config_logistica.dir_log)
+	funciones_generales.log_grabar('ERROR - Termino programa: Error de acceso a directorio', config_logistica.dir_log)
+	funciones_generales.envio_mail(config_logistica.mail_from,
+	                               config_logistica.mail_to,
+	                               config_logistica.mail_subject,
 	                               '',
 	                               f'Mensaje: {e.message}')
 	if hasattr(e, 'message'):
-		funciones_generales.log_grabar(f'ERROR - Termino programa - Message: {e.message}', config.dir_log)
-		funciones_generales.envio_mail(config.mail_from, config.mail_to,
-		                               config.mail_subject,
+		funciones_generales.log_grabar(f'ERROR - Termino programa - Message: {e.message}', config_logistica.dir_log)
+		funciones_generales.envio_mail(config_logistica.mail_from,
+		                               config_logistica.mail_to,
+		                               config_logistica.mail_subject,
 		                               '',
 		                               f'Mensaje: {e.message}')
 finally:
-	funciones_generales.log_grabar('Minderest - Integracion - Fin', config.dir_log)
+	funciones_generales.log_grabar('Logistica Transporte - Integracion - Fin', config_logistica.dir_log)

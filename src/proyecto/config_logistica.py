@@ -4,7 +4,7 @@ from pathlib import Path
 import json
 
 # Levanto las configuraciones del archivo .json
-with open('config_minderest.json', 'r') as file:
+with open('config_logistica.json', 'r') as file:
     # Lee el contenido del archivo JSON
     json_data = json.load(file)
 
@@ -14,15 +14,15 @@ timezone_argentina = pytz.timezone(json_data['generales']['timezone'])
 # Directorio de Log
 # dir_log = Path('C:/mis_entornos/vtex_api_catalogo/src/proyecto/vtex_catalogo_log.txt')
 dir_log = Path(json_data['generales']['directorio_log'])
-dir_sku_lista = Path(json_data['generales']['directorio_sku_lista'])
+dir_lista_entrega = Path(json_data['generales']['directorio_lista_entrega'])
 dir_archivo = Path(json_data['generales']['directorio_archivo'])
 dir_archivo_historial = Path(json_data['generales']['directorio_archivo_historial'])
 
-# Defino las credenciales del Server SQL de iPoint
-sql_server_ipoint = json_data['cred_SQL_ipoint']['sql_server_ipoint']
-sql_db_ipoint = json_data['cred_SQL_ipoint']['sql_db_ipoint']
-sql_user_ipoint = json_data['cred_SQL_ipoint']['sql_user_ipoint']
-sql_pass_ipoint = json_data['cred_SQL_ipoint']['sql_pass_ipoint']
+# Defino las credenciales del Server SQL de Bejerman
+sql_server_sb = json_data['cred_SQL_bejerman']['sql_server_sb']
+sql_db_sb = json_data['cred_SQL_bejerman']['sql_db_sb']
+sql_user_sb = json_data['cred_SQL_bejerman']['sql_user_sb']
+sql_pass_sb = json_data['cred_SQL_bejerman']['sql_pass_sb']
 tabla_stock_aux = json_data['cred_SQL_ipoint']['tabla_stock_aux']
 
 # Directorio de red
@@ -47,7 +47,7 @@ password_ftp = json_data['ftp']['password_ftp']
 
 
 # Parametros de negocio
-archivo_skus_integrar = json_data['parametros_negocio']['archivo_skus_integrar']
+archivo_entrega = json_data['parametros_negocio']['archivo_entrega']
 lista_precios_ipoint_id_PRICE_BEFORE_OFFER = json_data['parametros_negocio']['lista_precios_ipoint_id_PRICE_BEFORE_OFFER']
 lista_precios_ipoint_id_PRICE = json_data['parametros_negocio']['lista_precios_ipoint_id_PRICE']
 nombre_archivo_exportar = json_data['parametros_negocio']['nombre_archivo_exportar']

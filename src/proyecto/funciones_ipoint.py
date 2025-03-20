@@ -1,5 +1,5 @@
 import pyodbc
-import config
+import config_logistica
 
 import pyodbc
 
