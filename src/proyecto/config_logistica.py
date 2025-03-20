@@ -23,7 +23,12 @@ sql_server_sb = json_data['cred_SQL_bejerman']['sql_server_sb']
 sql_db_sb = json_data['cred_SQL_bejerman']['sql_db_sb']
 sql_user_sb = json_data['cred_SQL_bejerman']['sql_user_sb']
 sql_pass_sb = json_data['cred_SQL_bejerman']['sql_pass_sb']
-tabla_stock_aux = json_data['cred_SQL_ipoint']['tabla_stock_aux']
+
+# Defino las credenciales del Server SQL INTERMEDIO
+sql_server_int = json_data['cred_SQL_intermedio']['sql_server_int']
+sql_db_int = json_data['cred_SQL_intermedio']['sql_db_int']
+sql_user_int = json_data['cred_SQL_intermedio']['sql_user_int']
+sql_pass_int = json_data['cred_SQL_intermedio']['sql_pass_int']
 
 # Directorio de red
 copiar_direc_red = json_data['directorio_red']['copiar_direc_red']
@@ -48,6 +53,7 @@ password_ftp = json_data['ftp']['password_ftp']
 
 # Parametros de negocio
 archivo_entrega = json_data['parametros_negocio']['archivo_entrega']
+tabla_datosexcel = json_data['parametros_negocio']['tabla_datosexcel']
 lista_precios_ipoint_id_PRICE_BEFORE_OFFER = json_data['parametros_negocio']['lista_precios_ipoint_id_PRICE_BEFORE_OFFER']
 lista_precios_ipoint_id_PRICE = json_data['parametros_negocio']['lista_precios_ipoint_id_PRICE']
 nombre_archivo_exportar = json_data['parametros_negocio']['nombre_archivo_exportar']

@@ -1,0 +1,137 @@
+import pyodbc
+import config_logistica
+import math
+
+def safe_int(value, default=0):
+    """Convierte a int asegurándose de manejar NaN, None y valores inválidos."""
+    if value is None or (isinstance(value, float) and math.isnan(value)):
+        return default
+    return int(value)
+
+def safe_str(value, default=""):
+    """Convierte a string asegurándose de manejar None y NaN."""
+    if value is None or (isinstance(value, float) and math.isnan(value)):
+        return default
+    return str(value).strip()
+
+import pyodbc
+
+def obtener_nuevo_nro_proceso(sql_server, sql_db, sql_user, sql_pass):
+    """
+    Obtiene el valor máximo de Nro_Proceso en la tabla y le suma 1.
+    Si la tabla está vacía o el valor es NULL, devuelve 1.
+
+    :param sql_server: Servidor SQL Server.
+    :param sql_db: Base de datos SQL Server.
+    :param sql_user: Usuario de SQL Server.
+    :param sql_pass: Contraseña de SQL Server.
+    :return: Nuevo valor de Nro_Proceso.
+    """
+    try:
+        # Conexión con SQL Server
+        conexion = pyodbc.connect(
+            f'DRIVER={{ODBC Driver 17 for SQL Server}};'
+            f'SERVER={sql_server};DATABASE={sql_db};'
+            f'UID={sql_user};PWD={sql_pass}'
+        )
+
+        cursor = conexion.cursor()
+
+        # Consulta para obtener el máximo Nro_Proceso
+        cursor.execute(f"SELECT ISNULL(MAX(Nro_Proceso), 0) + 1 FROM {config_logistica.tabla_datosexcel}")
+        nuevo_nro_proceso = cursor.fetchone()[0]
+
+        return nuevo_nro_proceso
+
+    except Exception as e:
+        print(f"Error en la consulta: {e}")
+        return None
+
+    finally:
+        cursor.close()
+        conexion.close()
+
+def inser_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_entregas):
+	"""
+	Inserta registros en la tabla intermedia de SQL Server de manera masiva.
+
+	:param sql_server: Servidor SQL Server.
+	:param sql_db: Base de datos SQL Server.
+	:param sql_user: Usuario de SQL Server.
+	:param sql_pass: Contraseña de SQL Server.
+	:param nro_proceso: Número de proceso
+	:param list_entregas: Lista de diccionarios con los datos de las entregas
+	"""
+	try:
+		# Conexión con SQL Server
+		conexion = pyodbc.connect(
+			f'DRIVER={{ODBC Driver 17 for SQL Server}};'
+			f'SERVER={sql_server};DATABASE={sql_db};'
+			f'UID={sql_user};PWD={sql_pass}'
+		)
+
+		cursor = conexion.cursor()
+
+		# Filtrar duplicados basados en 'Remito'
+		remitos_vistos = set()
+		list_entregas_filtrada = []
+		for ent in list_entregas:
+			remito_valor = safe_str(safe_int(ent.get('Remito')))  # Convertir a int y luego a str
+			if remito_valor not in remitos_vistos:
+				remitos_vistos.add(remito_valor)
+				list_entregas_filtrada.append(ent)
+
+		# Listas para inserciones y actualizaciones masivas
+		datos_insert = []
+
+		for ent in list_entregas_filtrada:
+
+			# Transformaciones y validaciones
+			remito = safe_str(safe_int(ent.get('Remito')))  # Convertir a int y luego a str
+			cliente = safe_str(ent.get('Cliente'))
+			destinatario = safe_str(ent.get('Destinatario'))
+			domicilio = safe_str(ent.get('Domicilio'))
+			provincia = safe_str(ent.get('Provincia'))
+			ciudad = safe_str(ent.get('Ciudad'))
+			codigo_postal = safe_str(safe_int(ent.get('Codigo Postal')))  # Convertir a int y luego a str
+			retiro_generada = ent.get('Retiro Generada', None)
+			retiro_efectivo = ent.get('Retiro Efectivo', None)
+			entrega_efectiva = ent.get('Entrega Efectiva', None)
+			tipo_entrega = safe_str(ent.get('Tipo de Entrega'))
+			cantidad_bulto = safe_int(ent.get('Cantidad de Bulto'))  # Convertir a int
+
+			# Agregar a la lista de inserción
+			datos_insert.append((
+				remito, cliente, destinatario, domicilio, provincia, ciudad,
+				codigo_postal, retiro_generada, retiro_efectivo, entrega_efectiva,
+				tipo_entrega, cantidad_bulto
+			))
+
+		# Ejecución masiva de INSERT
+		if datos_insert:
+			sql_insert = f"""
+                INSERT INTO {config_logistica.tabla_datosexcel} (
+                    Nro_Proceso, Fecha_Proceso, HostName_Proceso, Remito, 
+                    Cliente, Destinatario, Domicilio, Provincia, 
+                    Ciudad, Codigo_Postal, Orden_Retiro_Generada, Retiro_Efectivo, 
+                    Entrega_Efectiva, Tipo_Entrega, Cantidad_Bulto
+                )
+                VALUES (
+                    {nro_proceso}, GETDATE(), HOST_NAME(), ?, 
+                    ?, ?, ?, ?, 
+                    ?, ?, ?, ?, 
+                    ?, ?, ?
+                )
+            """
+			cursor.executemany(sql_insert, datos_insert)
+
+		# Confirmar transacciones
+		conexion.commit()
+
+	except Exception as e:
+		print(f"Error en la operación: {e}")
+		conexion.rollback()
+
+	finally:
+		cursor.close()
+		conexion.close()

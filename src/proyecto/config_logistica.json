@@ -7,11 +7,16 @@
     "directorio_archivo_historial": "C:\\Temporal\\Minderest\\Historial"
   },
   "cred_SQL_bejerman": {
-    "sql_server_sb": "10.10.29.200",
+    "sql_server_sb": "10.0.0.97",
     "sql_db_sb": "iPoint_Prod",
-    "sql_user_sb":  "sistemas",
-    "sql_pass_sb": "Oblongo2020%",
-    "tabla_stock_aux": "SAT_tblPN_Minderest_Stock_Aux"
+    "sql_user_sb":  "bejerman",
+    "sql_pass_sb": "tiMCLmu27qtQwD"
+  },
+  "cred_SQL_intermedio": {
+    "sql_server_int": "10.0.0.97",
+    "sql_db_int": "DBReportes",
+    "sql_user_int":  "bejerman",
+    "sql_pass_int": "tiMCLmu27qtQwD"
   },
   "directorio_red": {
     "copiar_direc_red": 1,
@@ -35,6 +40,8 @@
   },
   "parametros_negocio": {
     "archivo_entrega": "Entregas",
+    "tabla_datosexcel": "tblLogistica_EntregaTransporte",
+
     "lista_precios_ipoint_id_PRICE_BEFORE_OFFER": 2,
     "lista_precios_ipoint_id_PRICE": 10,
     "nombre_archivo_exportar": "sku_integrar",

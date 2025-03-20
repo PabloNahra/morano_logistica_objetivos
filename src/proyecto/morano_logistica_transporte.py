@@ -8,8 +8,7 @@ El Excel posee datos del transporte de envios a clientes
 '''
 import os
 import config_logistica
-import funciones_generales
-import funciones_vtex
+import funciones_generales, func_baseintermedia
 import funciones_ipoint
 from decimal import Decimal
 
@@ -17,12 +16,24 @@ from decimal import Decimal
 try:
 	funciones_generales.log_grabar('Logistica Transporte - Integracion - Inicio', config_logistica.dir_log)
 
+	# Número de Proceso
+	nro_proceso = func_baseintermedia.obtener_nuevo_nro_proceso(sql_server=config_logistica.sql_server_int,
+	                                                     sql_db=config_logistica.sql_db_int,
+	                                                     sql_user=config_logistica.sql_user_int,
+	                                                     sql_pass=config_logistica.sql_pass_int)
+
 	# Toma el Excel del directorio
 	ruta_archivo = os.path.join(config_logistica.dir_lista_entrega, config_logistica.archivo_entrega)
 	lista_entregas = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo, titulo=0, datos=1)
 
 	# Copia datos del excel a tabla intermedia (con número de proceso) - La tabla intermedia en DBReportes
-
+	result = func_baseintermedia.inser_datos_excel(sql_server=config_logistica.sql_server_int,
+	                                                     sql_db=config_logistica.sql_db_int,
+	                                                     sql_user=config_logistica.sql_user_int,
+	                                                     sql_pass=config_logistica.sql_pass_int,
+	                                                     nro_proceso=nro_proceso,
+	                                               list_entregas=lista_entregas
+	                                               )
 
 	# Con los mismos datos que ya levantó, copia las fechas en el dato adicional de Bejerman
 
