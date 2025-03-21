@@ -1,20 +1,6 @@
 import pyodbc
 import config_logistica
-import math
-
-def safe_int(value, default=0):
-    """Convierte a int asegurándose de manejar NaN, None y valores inválidos."""
-    if value is None or (isinstance(value, float) and math.isnan(value)):
-        return default
-    return int(value)
-
-def safe_str(value, default=""):
-    """Convierte a string asegurándose de manejar None y NaN."""
-    if value is None or (isinstance(value, float) and math.isnan(value)):
-        return default
-    return str(value).strip()
-
-import pyodbc
+import funciones_generales
 
 def obtener_nuevo_nro_proceso(sql_server, sql_db, sql_user, sql_pass):
     """
@@ -51,7 +37,7 @@ def obtener_nuevo_nro_proceso(sql_server, sql_db, sql_user, sql_pass):
         cursor.close()
         conexion.close()
 
-def inser_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_entregas):
+def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_entregas):
 	"""
 	Inserta registros en la tabla intermedia de SQL Server de manera masiva.
 
@@ -76,7 +62,7 @@ def inser_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_e
 		remitos_vistos = set()
 		list_entregas_filtrada = []
 		for ent in list_entregas:
-			remito_valor = safe_str(safe_int(ent.get('Remito')))  # Convertir a int y luego a str
+			remito_valor = funciones_generales.safe_str(funciones_generales.safe_int(ent.get('Remito')))  # Convertir a int y luego a str
 			if remito_valor not in remitos_vistos:
 				remitos_vistos.add(remito_valor)
 				list_entregas_filtrada.append(ent)
@@ -87,18 +73,18 @@ def inser_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_e
 		for ent in list_entregas_filtrada:
 
 			# Transformaciones y validaciones
-			remito = safe_str(safe_int(ent.get('Remito')))  # Convertir a int y luego a str
-			cliente = safe_str(ent.get('Cliente'))
-			destinatario = safe_str(ent.get('Destinatario'))
-			domicilio = safe_str(ent.get('Domicilio'))
-			provincia = safe_str(ent.get('Provincia'))
-			ciudad = safe_str(ent.get('Ciudad'))
-			codigo_postal = safe_str(safe_int(ent.get('Codigo Postal')))  # Convertir a int y luego a str
+			remito = funciones_generales.safe_str(funciones_generales.safe_int(ent.get('Remito')))  # Convertir a int y luego a str
+			cliente = funciones_generales.safe_str(ent.get('Cliente'))
+			destinatario = funciones_generales.safe_str(ent.get('Destinatario'))
+			domicilio = funciones_generales.safe_str(ent.get('Domicilio'))
+			provincia = funciones_generales.safe_str(ent.get('Provincia'))
+			ciudad = funciones_generales.safe_str(ent.get('Ciudad'))
+			codigo_postal = funciones_generales.safe_str(funciones_generales.safe_int(ent.get('Codigo Postal')))  # Convertir a int y luego a str
 			retiro_generada = ent.get('Retiro Generada', None)
 			retiro_efectivo = ent.get('Retiro Efectivo', None)
 			entrega_efectiva = ent.get('Entrega Efectiva', None)
-			tipo_entrega = safe_str(ent.get('Tipo de Entrega'))
-			cantidad_bulto = safe_int(ent.get('Cantidad de Bulto'))  # Convertir a int
+			tipo_entrega = funciones_generales.safe_str(ent.get('Tipo de Entrega'))
+			cantidad_bulto = funciones_generales.safe_int(ent.get('Cantidad de Bulto'))  # Convertir a int
 
 			# Agregar a la lista de inserción
 			datos_insert.append((
@@ -135,3 +121,5 @@ def inser_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_e
 	finally:
 		cursor.close()
 		conexion.close()
+
+	return list_entregas_filtrada  # Retornar la lista filtrada

@@ -54,6 +54,9 @@ password_ftp = json_data['ftp']['password_ftp']
 # Parametros de negocio
 archivo_entrega = json_data['parametros_negocio']['archivo_entrega']
 tabla_datosexcel = json_data['parametros_negocio']['tabla_datosexcel']
+comprobantes_rt = json_data['parametros_negocio']['comprobantes_rt']
+
+
 lista_precios_ipoint_id_PRICE_BEFORE_OFFER = json_data['parametros_negocio']['lista_precios_ipoint_id_PRICE_BEFORE_OFFER']
 lista_precios_ipoint_id_PRICE = json_data['parametros_negocio']['lista_precios_ipoint_id_PRICE']
 nombre_archivo_exportar = json_data['parametros_negocio']['nombre_archivo_exportar']

@@ -4,9 +4,8 @@ import smtplib
 from email.message import EmailMessage
 import pandas as pd
 import os
-from ftplib import FTP
 import subprocess
-
+import math
 
 
 def obtener_hora_actual():
@@ -158,3 +157,16 @@ def envio_mail(mail_from, mail_to, mail_subject, mail_attachment, mail_content):
 def copiar_archivo_a_red(archivo_local, directorio_red, usuario, contrasena):
     comando = f'net use {directorio_red} /user:{usuario} {contrasena} && copy "{archivo_local}" "{directorio_red}"'
     subprocess.run(comando, shell=True)
+
+
+def safe_int(value, default=0):
+    """Convierte a int asegurándose de manejar NaN, None y valores inválidos."""
+    if value is None or (isinstance(value, float) and math.isnan(value)):
+        return default
+    return int(value)
+
+def safe_str(value, default=""):
+    """Convierte a string asegurándose de manejar None y NaN."""
+    if value is None or (isinstance(value, float) and math.isnan(value)):
+        return default
+    return str(value).strip()

@@ -8,7 +8,7 @@ El Excel posee datos del transporte de envios a clientes
 '''
 import os
 import config_logistica
-import funciones_generales, func_baseintermedia
+import funciones_generales, func_baseintermedia, func_bejerman
 import funciones_ipoint
 from decimal import Decimal
 
@@ -27,7 +27,7 @@ try:
 	lista_entregas = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo, titulo=0, datos=1)
 
 	# Copia datos del excel a tabla intermedia (con número de proceso) - La tabla intermedia en DBReportes
-	result = func_baseintermedia.inser_datos_excel(sql_server=config_logistica.sql_server_int,
+	lista_entregas_filt = func_baseintermedia.insert_datos_excel(sql_server=config_logistica.sql_server_int,
 	                                                     sql_db=config_logistica.sql_db_int,
 	                                                     sql_user=config_logistica.sql_user_int,
 	                                                     sql_pass=config_logistica.sql_pass_int,
@@ -35,7 +35,15 @@ try:
 	                                               list_entregas=lista_entregas
 	                                               )
 
-	# Con los mismos datos que ya levantó, copia las fechas en el dato adicional de Bejerman
+	# Con los mismos datos que se insertaron, copiar las fechas en el dato adicional de Bejerman: lista_entregas_filt
+	list_entregas_actualizar = func_bejerman.actualizar_datos_adicionales_sb(sql_server=config_logistica.sql_server_sb,
+	                                              sql_db=config_logistica.sql_db_sb,
+	                                              sql_user=config_logistica.sql_user_sb,
+	                                              sql_pass=config_logistica.sql_pass_sb,
+	                                              list_entregas_filt=lista_entregas_filt
+	                                              )
+
+	print(len(list_entregas_actualizar))
 
 	# Mueve el archivo a procesados o NO procesados
 

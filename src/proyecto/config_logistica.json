@@ -8,7 +8,7 @@
   },
   "cred_SQL_bejerman": {
     "sql_server_sb": "10.0.0.97",
-    "sql_db_sb": "iPoint_Prod",
+    "sql_db_sb": "SBDpMMHE",
     "sql_user_sb":  "bejerman",
     "sql_pass_sb": "tiMCLmu27qtQwD"
   },
@@ -41,6 +41,7 @@
   "parametros_negocio": {
     "archivo_entrega": "Entregas",
     "tabla_datosexcel": "tblLogistica_EntregaTransporte",
+    "comprobantes_rt": "('RTS','RTM')",
 
     "lista_precios_ipoint_id_PRICE_BEFORE_OFFER": 2,
     "lista_precios_ipoint_id_PRICE": 10,
