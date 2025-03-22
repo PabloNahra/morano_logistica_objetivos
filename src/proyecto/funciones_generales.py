@@ -170,3 +170,51 @@ def safe_str(value, default=""):
     if value is None or (isinstance(value, float) and math.isnan(value)):
         return default
     return str(value).strip()
+
+
+import os
+import shutil
+import datetime
+
+
+def mover_archivo(directorio_origen=None, nombre_archivo_origen="Entregas", extension_origen="xlsx",
+                  directorio_exportar=None,
+                  incluye_fecha=1):
+	# Si no se especifica directorio de origen, usar el del ejecutable
+	if directorio_origen is None:
+		directorio_origen = os.getcwd()
+
+	# Construir la ruta completa del archivo de origen
+	archivo_origen = os.path.join(directorio_origen, f"{nombre_archivo_origen}.{extension_origen}")
+
+	# Verificar si el archivo existe
+	if not os.path.exists(archivo_origen):
+		print(f"El archivo {archivo_origen} no existe.")
+		return False
+
+	# Si no se especifica directorio de origen, usar el del ejecutable
+	if directorio_exportar is None:
+		directorio_exportar = os.path.join(os.getcwd(), "Procesados")
+
+	# Asegurar que el directorio de exportación existe
+	if not os.path.exists(directorio_exportar):
+		os.makedirs(directorio_exportar)
+
+	# Construir el nuevo nombre del archivo
+	if incluye_fecha:
+		fecha_actual = datetime.datetime.now().strftime("_%Y%m%d_%H%M%S")
+		nombre_archivo_destino = f"{nombre_archivo_origen}{fecha_actual}.{extension_origen}"
+	else:
+		nombre_archivo_destino = f"{nombre_archivo_origen}.{extension_origen}"
+
+	# Construir la ruta completa del archivo de destino
+	archivo_destino = os.path.join(directorio_exportar, nombre_archivo_destino)
+
+	# Mover el archivo
+	try:
+		shutil.move(archivo_origen, archivo_destino)
+		print(f"Archivo movido a: {archivo_destino}")
+		return True
+	except Exception as e:
+		print(f"Error al mover el archivo: {e}")
+		return False

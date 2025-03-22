@@ -1,10 +1,7 @@
 {
   "generales": {
     "timezone": "America/Argentina/Buenos_Aires",
-    "directorio_log": "logistica_int_log.txt",
-    "directorio_lista_entrega": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos",
-    "directorio_archivo": "C:\\Temporal\\Minderest",
-    "directorio_archivo_historial": "C:\\Temporal\\Minderest\\Historial"
+    "directorio_log": "logistica_int_log.txt"
   },
   "cred_SQL_bejerman": {
     "sql_server_sb": "10.0.0.97",
@@ -31,21 +28,13 @@
     "mail_to":  "pablonahra@pnahra.com",
     "mail_subject": "INCONVENIENTE: Integracion Minderest"
   },
-  "ftp": {
-    "subir_ftp": 0,
-    "server_ftp": "201.216.210.161",
-    "port_ftp": 3021,
-    "user_ftp": "ftpminderest",
-    "password_ftp": "%Mind_Ftp..2024"
-  },
   "parametros_negocio": {
+    "directorio_lista_entrega": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos",
     "archivo_entrega": "Entregas",
     "tabla_datosexcel": "tblLogistica_EntregaTransporte",
     "comprobantes_rt": "('RTS','RTM')",
-
-    "lista_precios_ipoint_id_PRICE_BEFORE_OFFER": 2,
-    "lista_precios_ipoint_id_PRICE": 10,
-    "nombre_archivo_exportar": "sku_integrar",
-    "tipo_archivo_exportar": "csv"
+    "dir_archivo_procesado": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\Procesados",
+    "dir_archivo_no_procesado": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\NO_Procesados",
+    "dir_archivo_proc_incluye_fecha": 1
   }
 }

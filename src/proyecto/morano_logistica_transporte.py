@@ -43,104 +43,17 @@ try:
 	                                              list_entregas_filt=lista_entregas_filt
 	                                              )
 
-	print(len(list_entregas_actualizar))
-
 	# Mueve el archivo a procesados o NO procesados
+	if 1 == 1:
+		funciones_generales.mover_archivo(directorio_origen=config_logistica.dir_lista_entrega,
+		                                  nombre_archivo_origen=config_logistica.archivo_entrega,
+		                                  extension_origen="xlsx",
+		                                  directorio_exportar=config_logistica.dir_archivo_procesado,
+		                                  incluye_fecha=config_logistica.dir_archivo_proc_incluye_fecha)
+	else:
+		print("NO procesado")
 
 	# Muestra un resumen de lo que ocurrio en el proceso
-
-
-	## CODIGO ANTERIOR
-	sku_lista_exportar = []
-
-
-	# Recorremos los SKU
-	for sku in lista_sku:
-		try:
-			sku_datos_ordenados = {}
-
-			# Leer datos de SKU de VTEX
-			info_vtex_sku = funciones_vtex.vtex_sku_by_ref_id(sku=sku['SKU'])
-
-			# Leer datos de SKU de iPoint
-			info_sku_ipoint = funciones_ipoint.ipoint_by_sku_sql(sql_server=config.sql_server_ipoint,
-			                                    sql_db=config.sql_db_ipoint,
-			                                    sql_user=config.sql_user_ipoint,
-			                                    sql_pass=config.sql_pass_ipoint,
-			                                    sku=sku['SKU'])
-
-			sku_datos_ordenados = {
-				'ID': info_sku_ipoint['ID'],
-				'URL': info_vtex_sku['URL'],
-				'NAME': info_vtex_sku['NAME'],
-				'EAN': info_sku_ipoint['EAN'],
-				'PRICE': round(
-					round(float(Decimal(info_sku_ipoint['PRICE'])), 2) *
-					((100 + info_sku_ipoint['VAT']) / 100),
-					0),
-				'PRICE_BEFORE_OFFER': round(
-					round(float(Decimal(info_sku_ipoint['PRICE_BEFORE_OFFER'])), 2) *
-					((100 + info_sku_ipoint['VAT']) / 100),
-					0),
-				'COST': 0,
-				'CURRENCY': "ARS",
-				'VAT': info_sku_ipoint['VAT'],
-				'STOCK': round(float(Decimal(info_sku_ipoint['STOCK'])), 0),
-				'URL_IMAGE': info_vtex_sku['URL_IMAGE'],
-				'BRAND': info_sku_ipoint['BRAND'],
-				'OWN_BRAND': "",
-				'OWN_BRAND_COMP': "",
-				'MPN': info_sku_ipoint['MPN'],
-				'CATEGORY': ">".join([value for key, value in info_vtex_sku['CATEGORY'].items()]),
-				'TAG': info_vtex_sku['TAG'],
-				'SHIPPING_COST': 0,
-				'UNIT': "UNIDAD",
-				'VALUE': 1
-			}
-
-			sku_lista_exportar.append(sku_datos_ordenados)
-
-		except Exception as e:
-			funciones_generales.log_grabar(f'ERROR - SKU: {sku["SKU"]} - Exception: {e}', config_logistica.dir_log)
-
-			if hasattr(e, 'message'):
-				funciones_generales.log_grabar(f'ERROR - SKU: {sku["SKU"]} - Message: {e.message}', config_logistica.dir_log)
-			continue  # Continuar con el siguiente SKU después de manejar la excepción
-
-	# Generar archivo de salida para subir al FTP
-	file_to_ftp = funciones_generales.exportacion_archivo(sku_lista_exportar, config.nombre_archivo_exportar,
-	                                        incl_fecha=0, tipo_archivo=config.tipo_archivo_exportar,
-	                                        directorio=config.dir_archivo)
-
-	# Generar archivo de salida de log
-	funciones_generales.exportacion_archivo(sku_lista_exportar, config.nombre_archivo_exportar,
-	                                        incl_fecha=1, tipo_archivo=config.tipo_archivo_exportar,
-	                                        directorio=config.dir_archivo_historial)
-
-	# Envio el archivo al directorio de RED que se publica por FTP
-	# Codeo los valores para la conexión de red
-	user = "SAT\\administrador"
-	password = "Octaedro2020%"
-
-	if config_logistica.copiar_direc_red == 1:
-		funciones_generales.copiar_archivo_a_red(archivo_local=file_to_ftp,
-		                                         directorio_red=config.directorio_red,
-	                                             usuario=user,
-	                                             contrasena=password)
-
-
-
-	# Subir archivo a FTP
-	if config.subir_ftp == 1:
-		funciones_generales.subir_archivo_ftp(server=config.server_ftp,
-	                                      port=config.port_ftp,
-	                                      user=config.user_ftp,
-	                                      password=config.password_ftp,
-	                                      archivo_local=f"{config.dir_archivo}//"
-	                                                    f"{config.nombre_archivo_exportar}."
-	                                                    f"{config.tipo_archivo_exportar}" ,
-	                                          archivo_remoto=f"{config.nombre_archivo_exportar}."
-	                                                    f"{config.tipo_archivo_exportar}")
 
 
 except Exception as e:
