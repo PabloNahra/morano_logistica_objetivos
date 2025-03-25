@@ -89,8 +89,8 @@ def ejecutar_proceso():
 			                                  incluye_fecha=config_logistica.dir_archivo_proc_incluye_fecha)
 			mensaje_final = (f"El proceso terminó exitosamente\n\n"
 			                 f"Del total de {len(lista_entregas)} registros:\n"
-			                 f"Se actualizaron {len(list_entregas_actualizar)}\n"
-			                 f"NO se utilizaron {len(lista_entregas) - len(list_entregas_actualizar)}")
+			                 f"Se actualizaron: {len(list_entregas_actualizar)}\n"
+			                 f"NO se utilizaron: {len(lista_entregas) - len(list_entregas_actualizar)}")
 
 		else:
 			funciones_generales.mover_archivo(directorio_origen=config_logistica.dir_lista_entrega,
