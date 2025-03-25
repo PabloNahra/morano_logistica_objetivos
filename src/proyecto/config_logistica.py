@@ -2,6 +2,11 @@
 import pytz
 from pathlib import Path
 import json
+from cryptography.fernet import Fernet
+
+# Clave de encriptación con fernet
+key_generada = "vCpxjxZ3RiFHUI6GDOozI-NXAebX1a8r2GnjVBBifnI=".encode()
+fernet = Fernet(key_generada)
 
 # Levanto las configuraciones del archivo .json
 with open('config_logistica.json', 'r') as file:
@@ -20,7 +25,10 @@ dir_log = Path(json_data['generales']['directorio_log'])
 sql_server_sb = json_data['cred_SQL_bejerman']['sql_server_sb']
 sql_db_sb = json_data['cred_SQL_bejerman']['sql_db_sb']
 sql_user_sb = json_data['cred_SQL_bejerman']['sql_user_sb']
-sql_pass_sb = json_data['cred_SQL_bejerman']['sql_pass_sb']
+# sql_pass_sb = json_data['cred_SQL_bejerman']['sql_pass_sb']
+sql_pass_sb_encrypted_password = json_data['cred_SQL_bejerman']['sql_pass_sb'].encode()
+sql_pass_sb = fernet.decrypt(sql_pass_sb_encrypted_password).decode()
+
 
 # Defino las credenciales del Server SQL INTERMEDIO
 sql_server_int = json_data['cred_SQL_intermedio']['sql_server_int']

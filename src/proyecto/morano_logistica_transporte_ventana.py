@@ -80,18 +80,28 @@ def ejecutar_proceso():
 			list_entregas_filt=lista_entregas_filt)
 		actualizar_progreso(progreso, ventana, 90)
 
-		# Mueve el archivo a procesados
-		funciones_generales.mover_archivo(directorio_origen=config_logistica.dir_lista_entrega,
-		                                  nombre_archivo_origen=config_logistica.archivo_entrega,
-		                                  extension_origen="xlsx",
-		                                  directorio_exportar=config_logistica.dir_archivo_procesado,
-		                                  incluye_fecha=config_logistica.dir_archivo_proc_incluye_fecha)
-		actualizar_progreso(progreso, ventana, 100)
+		# Mueve el archivo a procesados o NO procesados
+		if len(list_entregas_actualizar) != 0:
+			funciones_generales.mover_archivo(directorio_origen=config_logistica.dir_lista_entrega,
+			                                  nombre_archivo_origen=config_logistica.archivo_entrega,
+			                                  extension_origen="xlsx",
+			                                  directorio_exportar=config_logistica.dir_archivo_procesado,
+			                                  incluye_fecha=config_logistica.dir_archivo_proc_incluye_fecha)
+			mensaje_final = (f"El proceso terminó exitosamente\n\n"
+			                 f"Del total de {len(lista_entregas)} registros:\n"
+			                 f"Se actualizaron {len(list_entregas_actualizar)}\n"
+			                 f"NO se utilizaron {len(lista_entregas) - len(list_entregas_actualizar)}")
 
-		mensaje_final = (f"El proceso terminó exitosamente\n\n"
-		                 f"Del total de {len(lista_entregas)} registros:\n"
-		                 f"Se actualizaron {len(list_entregas_actualizar)}\n"
-		                 f"NO se utilizaron {len(lista_entregas) - len(list_entregas_actualizar)}")
+		else:
+			funciones_generales.mover_archivo(directorio_origen=config_logistica.dir_lista_entrega,
+			                                  nombre_archivo_origen=config_logistica.archivo_entrega,
+			                                  extension_origen="xlsx",
+			                                  directorio_exportar=config_logistica.dir_archivo_no_procesado,
+			                                  incluye_fecha=config_logistica.dir_archivo_proc_incluye_fecha)
+			mensaje_final = (f"El proceso terminó con INCONVENIENTES")
+
+
+		actualizar_progreso(progreso, ventana, 100)
 
 	except Exception as e:
 		funciones_generales.log_grabar(f'ERROR - Termino programa - Exception: {e}', config_logistica.dir_log)
@@ -99,7 +109,13 @@ def ejecutar_proceso():
 		                               config_logistica.mail_to,
 		                               config_logistica.mail_subject, '',
 		                               f'Mensaje: {e}')
-		mensaje_final = f'Mensaje: {e}'
+
+		funciones_generales.mover_archivo(directorio_origen=config_logistica.dir_lista_entrega,
+		                                  nombre_archivo_origen=config_logistica.archivo_entrega,
+		                                  extension_origen="xlsx",
+		                                  directorio_exportar=config_logistica.dir_archivo_no_procesado,
+		                                  incluye_fecha=config_logistica.dir_archivo_proc_incluye_fecha)
+		mensaje_final = (f"El proceso terminó con INCONVENIENTES: {e}")
 
 	finally:
 		funciones_generales.log_grabar('Logistica Transporte - Integracion - Fin', config_logistica.dir_log)
