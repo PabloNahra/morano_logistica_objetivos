@@ -13,7 +13,7 @@ key_generada = "vCpxjxZ3RiFHUI6GDOozI-NXAebX1a8r2GnjVBBifnI="
 fernet = Fernet(key_generada)
 
 # La contraseña a encriptar
-password = "tiMCLmu27qtQwD"
+password = "Swatch2021%"
 
 # Encriptar la contraseña
 encrypted_password = fernet.encrypt(password.encode())

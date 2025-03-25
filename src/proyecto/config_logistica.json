@@ -4,16 +4,16 @@
     "directorio_log": "logistica_int_log.txt"
   },
   "cred_SQL_bejerman": {
-    "sql_server_sb": "10.0.0.97",
+    "sql_server_sb": "gAAAAABn4tZXtRZhsVkLRgLuliyi90e-66JBbPyiyaKaFtAuJkhaCBOGVEw9fy7x1bUcLF8_rx5ICdur6uP6zixVVI7cy3j2Gw==",
     "sql_db_sb": "SBDpMMHE",
-    "sql_user_sb":  "bejerman",
+    "sql_user_sb":  "gAAAAABn4tfVFH0Ig2AqEBTZkQ2JL6uaqqlDMIFsNpygIcr54ayqQnFOW0icKCoi0yjgzVtLl6_1Gc-JpKqHEvBQqawisDWC0A==",
     "sql_pass_sb": "gAAAAABn4tXNkb9rGmwFJj5XHJoi9dH5-rIDAwP5jW-WG9K4SkiN2LDZAS9ov1O06gTAWr16-Ba7J908OGGUZuzwsNYJv6uD0g=="
   },
   "cred_SQL_intermedio": {
-    "sql_server_int": "10.0.0.97",
+    "sql_server_int": "gAAAAABn4tZXtRZhsVkLRgLuliyi90e-66JBbPyiyaKaFtAuJkhaCBOGVEw9fy7x1bUcLF8_rx5ICdur6uP6zixVVI7cy3j2Gw==",
     "sql_db_int": "DBReportes",
-    "sql_user_int":  "bejerman",
-    "sql_pass_int": "tiMCLmu27qtQwD"
+    "sql_user_int":  "gAAAAABn4tfVFH0Ig2AqEBTZkQ2JL6uaqqlDMIFsNpygIcr54ayqQnFOW0icKCoi0yjgzVtLl6_1Gc-JpKqHEvBQqawisDWC0A==",
+    "sql_pass_int": "gAAAAABn4tXNkb9rGmwFJj5XHJoi9dH5-rIDAwP5jW-WG9K4SkiN2LDZAS9ov1O06gTAWr16-Ba7J908OGGUZuzwsNYJv6uD0g=="
   },
   "directorio_red": {
     "copiar_direc_red": 1,
@@ -23,10 +23,10 @@
     "email_smtp": "mail.satrendy.net",
     "email_port": "587",
     "sender_email_address": "noreply@satrendy.net",
-    "email_password": "Swatch2021%",
+    "email_password": "gAAAAABn4tlb5-oJBKIN_7tTe6bOw6MTGzMypuwLI6LjhPCynmOXJxYeNNFq4-iLvuDjwtAuzfzPau2hJwS93cLqBNsvYBJhew==",
     "mail_from":  "noreply@satrendy.net",
     "mail_to":  "pablonahra@pnahra.com",
-    "mail_subject": "INCONVENIENTE: Integracion Minderest"
+    "mail_subject": "INCONVENIENTE: Morano - Logistica"
   },
   "parametros_negocio": {
     "directorio_lista_entrega": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos",

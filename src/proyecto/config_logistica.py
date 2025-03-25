@@ -22,19 +22,35 @@ dir_log = Path(json_data['generales']['directorio_log'])
 
 
 # Defino las credenciales del Server SQL de Bejerman
-sql_server_sb = json_data['cred_SQL_bejerman']['sql_server_sb']
+# sql_server_sb = json_data['cred_SQL_bejerman']['sql_server_sb']
+sql_server_sb_encrypted_password = json_data['cred_SQL_bejerman']['sql_server_sb'].encode()
+sql_server_sb = fernet.decrypt(sql_server_sb_encrypted_password).decode()
+
 sql_db_sb = json_data['cred_SQL_bejerman']['sql_db_sb']
-sql_user_sb = json_data['cred_SQL_bejerman']['sql_user_sb']
+# sql_user_sb = json_data['cred_SQL_bejerman']['sql_user_sb']
+sql_user_sb_encrypted_password = json_data['cred_SQL_bejerman']['sql_user_sb'].encode()
+sql_user_sb = fernet.decrypt(sql_user_sb_encrypted_password).decode()
+
+
 # sql_pass_sb = json_data['cred_SQL_bejerman']['sql_pass_sb']
 sql_pass_sb_encrypted_password = json_data['cred_SQL_bejerman']['sql_pass_sb'].encode()
 sql_pass_sb = fernet.decrypt(sql_pass_sb_encrypted_password).decode()
 
 
 # Defino las credenciales del Server SQL INTERMEDIO
-sql_server_int = json_data['cred_SQL_intermedio']['sql_server_int']
+# sql_server_int = json_data['cred_SQL_intermedio']['sql_server_int']
+sql_server_int_encrypted_password = json_data['cred_SQL_intermedio']['sql_server_int'].encode()
+sql_server_int = fernet.decrypt(sql_server_int_encrypted_password).decode()
+
 sql_db_int = json_data['cred_SQL_intermedio']['sql_db_int']
-sql_user_int = json_data['cred_SQL_intermedio']['sql_user_int']
-sql_pass_int = json_data['cred_SQL_intermedio']['sql_pass_int']
+
+# sql_user_int = json_data['cred_SQL_intermedio']['sql_user_int']
+sql_user_int_encrypted_password = json_data['cred_SQL_intermedio']['sql_user_int'].encode()
+sql_user_int = fernet.decrypt(sql_user_int_encrypted_password).decode()
+
+# sql_pass_int = json_data['cred_SQL_intermedio']['sql_pass_int']
+sql_pass_int_encrypted_password = json_data['cred_SQL_intermedio']['sql_pass_int'].encode()
+sql_pass_int = fernet.decrypt(sql_pass_int_encrypted_password).decode()
 
 # Directorio de red
 copiar_direc_red = json_data['directorio_red']['copiar_direc_red']
@@ -44,7 +60,11 @@ directorio_red = json_data['directorio_red']['directorio_red']
 email_smtp = json_data['envio_mail']['email_smtp']
 email_port = json_data['envio_mail']['email_port']
 sender_email_address = json_data['envio_mail']['sender_email_address']
-email_password = json_data['envio_mail']['email_password']
+
+# email_password = json_data['envio_mail']['email_password']
+email_password_encrypted_password = json_data['envio_mail']['email_password'].encode()
+email_password = fernet.decrypt(email_password_encrypted_password).decode()
+
 mail_from = json_data['envio_mail']['mail_from']
 mail_to = json_data['envio_mail']['mail_to']
 mail_subject = json_data['envio_mail']['mail_subject']
