@@ -39,7 +39,8 @@ def leer_excel_y_convertir_a_lista(nombre_archivo_excel, titulo=0, datos=1):
 
     try:
         # Leer el archivo Excel con la fila de títulos y saltando las filas innecesarias
-        df = pd.read_excel(nombre_archivo, header=titulo, skiprows=range(0, datos))
+        # df = pd.read_excel(nombre_archivo, header=titulo, skiprows=range(0, datos))
+        df = pd.read_excel(nombre_archivo, header=titulo, skiprows=datos)
 
         # Convertir el DataFrame en una lista de diccionarios
         lista_resultante = df.to_dict(orient="records")

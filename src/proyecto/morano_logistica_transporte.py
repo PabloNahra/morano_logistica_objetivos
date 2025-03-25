@@ -24,7 +24,7 @@ try:
 
 	# Toma el Excel del directorio
 	ruta_archivo = os.path.join(config_logistica.dir_lista_entrega, config_logistica.archivo_entrega)
-	lista_entregas = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo, titulo=0, datos=1)
+	lista_entregas = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo, titulo=0, datos=0)
 
 	# Copia datos del excel a tabla intermedia (con número de proceso) - La tabla intermedia en DBReportes
 	lista_entregas_filt = func_baseintermedia.insert_datos_excel(sql_server=config_logistica.sql_server_int,

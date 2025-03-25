@@ -9,10 +9,8 @@ El Excel posee datos del transporte de envios a clientes
 import os
 import config_logistica
 import funciones_generales, func_baseintermedia, func_bejerman
-import funciones_ipoint
 import tkinter as tk
 from tkinter import ttk
-from decimal import Decimal
 
 
 def actualizar_progreso(progreso, ventana, porcentaje):
@@ -31,12 +29,16 @@ def mostrar_mensaje_final(ventana, mensaje):
 
 def ejecutar_proceso():
 	ventana = tk.Tk()
-	ventana.title("Actualizando datos de Logística")
-	ventana.geometry("400x200")
+	ventana.title("LOGISTICA - ACTUALIZANDO")
+	ventana.geometry("350x180")
 	ventana.resizable(False, False)
 	ventana.eval('tk::PlaceWindow . center')
 
-	label = tk.Label(ventana, text="Procesando...", font=("Arial", 12))
+	# Cambiar el icono de la ventana
+	ventana.iconbitmap("morano_icon2.ico")
+
+	# label = tk.Label(ventana, text="Procesando...", font=("Arial", 14), bg=ventana.cget("bg"))
+	label = tk.Label(ventana, text="Procesando...", font=("Arial", 14), bg="white")
 	label.pack(pady=10)
 
 	progreso = ttk.Progressbar(ventana, length=300, mode="determinate")
@@ -57,7 +59,7 @@ def ejecutar_proceso():
 
 		# Toma el Excel del directorio
 		ruta_archivo = os.path.join(config_logistica.dir_lista_entrega, config_logistica.archivo_entrega)
-		lista_entregas = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo, titulo=0, datos=1)
+		lista_entregas = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo, titulo=0, datos=0)
 		actualizar_progreso(progreso, ventana, 50)
 
 		# Copia datos del excel a tabla intermedia
@@ -86,7 +88,10 @@ def ejecutar_proceso():
 		                                  incluye_fecha=config_logistica.dir_archivo_proc_incluye_fecha)
 		actualizar_progreso(progreso, ventana, 100)
 
-		mensaje_final = f"El proceso terminó exitosamente\nDel total de {len(lista_entregas)} registros:\n- Se actualizaron {len(list_entregas_actualizar)}\n- NO se utilizaron {len(lista_entregas) - len(list_entregas_actualizar)}"
+		mensaje_final = (f"El proceso terminó exitosamente\n\n"
+		                 f"Del total de {len(lista_entregas)} registros:\n"
+		                 f"Se actualizaron {len(list_entregas_actualizar)}\n"
+		                 f"NO se utilizaron {len(lista_entregas) - len(list_entregas_actualizar)}")
 
 	except Exception as e:
 		funciones_generales.log_grabar(f'ERROR - Termino programa - Exception: {e}', config_logistica.dir_log)
@@ -94,7 +99,7 @@ def ejecutar_proceso():
 		                               config_logistica.mail_to,
 		                               config_logistica.mail_subject, '',
 		                               f'Mensaje: {e}')
-		mensaje_final = "El proceso tuvo INCONVENIENTES"
+		mensaje_final = f'Mensaje: {e}'
 
 	finally:
 		funciones_generales.log_grabar('Logistica Transporte - Integracion - Fin', config_logistica.dir_log)
