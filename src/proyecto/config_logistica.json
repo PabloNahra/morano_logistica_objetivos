@@ -15,10 +15,6 @@
     "sql_user_int":  "gAAAAABn4tfVFH0Ig2AqEBTZkQ2JL6uaqqlDMIFsNpygIcr54ayqQnFOW0icKCoi0yjgzVtLl6_1Gc-JpKqHEvBQqawisDWC0A==",
     "sql_pass_int": "gAAAAABn4tXNkb9rGmwFJj5XHJoi9dH5-rIDAwP5jW-WG9K4SkiN2LDZAS9ov1O06gTAWr16-Ba7J908OGGUZuzwsNYJv6uD0g=="
   },
-  "directorio_red": {
-    "copiar_direc_red": 1,
-    "directorio_red": "\\\\10.10.29.89\\srvftp\\minderest"
-  },
   "envio_mail": {
     "email_smtp": "mail.satrendy.net",
     "email_port": "587",

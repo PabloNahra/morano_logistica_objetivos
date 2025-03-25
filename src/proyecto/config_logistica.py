@@ -52,10 +52,6 @@ sql_user_int = fernet.decrypt(sql_user_int_encrypted_password).decode()
 sql_pass_int_encrypted_password = json_data['cred_SQL_intermedio']['sql_pass_int'].encode()
 sql_pass_int = fernet.decrypt(sql_pass_int_encrypted_password).decode()
 
-# Directorio de red
-copiar_direc_red = json_data['directorio_red']['copiar_direc_red']
-directorio_red = json_data['directorio_red']['directorio_red']
-
 # Configuracion de envio de mails
 email_smtp = json_data['envio_mail']['email_smtp']
 email_port = json_data['envio_mail']['email_port']
