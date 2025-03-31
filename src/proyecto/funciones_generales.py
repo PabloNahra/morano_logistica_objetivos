@@ -4,8 +4,10 @@ import smtplib
 from email.message import EmailMessage
 import pandas as pd
 import os
-import subprocess
 import math
+import config_logistica
+import shutil
+import datetime
 
 
 def obtener_hora_actual():
@@ -23,7 +25,6 @@ def log_grabar(texto, dir_log):
     archivo.close()
 
     return 0
-
 
 
 def leer_excel_y_convertir_a_lista(nombre_archivo_excel, titulo=0, datos=1):
@@ -48,10 +49,12 @@ def leer_excel_y_convertir_a_lista(nombre_archivo_excel, titulo=0, datos=1):
         return lista_resultante
 
     except FileNotFoundError:
-        print(f"Error: No se pudo encontrar el archivo {nombre_archivo}")
+        log_grabar(f"Error: No se pudo encontrar el archivo {nombre_archivo} - leer_excel_y_convertir_a_lista()",
+                   config_logistica.dir_log)
         return None
     except Exception as e:
-        print(f"Error: {e}")
+        log_grabar(f"Error: {e} - leer_excel_y_convertir_a_lista()",
+                   config_logistica.dir_log)
         return None
 
 def exportacion_archivo(lista_diccionarios, nombre_archivo,
@@ -134,7 +137,7 @@ def envio_mail(mail_from, mail_to, mail_subject, mail_attachment, mail_content):
 			)
 
 	# configurar smtp server y port
-	email_smtp = 'mail.satrendy.net'
+	email_smtp = config_logistica
 	server = smtplib.SMTP(email_smtp, '587')
 
 	# Identify this client to the SMTP server
@@ -144,8 +147,8 @@ def envio_mail(mail_from, mail_to, mail_subject, mail_attachment, mail_content):
 	server.starttls()
 
 	# loguearse en el mail
-	sender_email_address = "noreply@satrendy.net"
-	email_password = "Swatch2021%"
+	sender_email_address = config_logistica.email_smtp # "noreply@satrendy.net"
+	email_password = config_logistica.email_password # "Swatch2021%"
 	server.login(sender_email_address, email_password)
 
 	# Send email
@@ -154,11 +157,6 @@ def envio_mail(mail_from, mail_to, mail_subject, mail_attachment, mail_content):
 	server.quit()
 
 	return
-
-def copiar_archivo_a_red(archivo_local, directorio_red, usuario, contrasena):
-    comando = f'net use {directorio_red} /user:{usuario} {contrasena} && copy "{archivo_local}" "{directorio_red}"'
-    subprocess.run(comando, shell=True)
-
 
 def safe_int(value, default=0):
     """Convierte a int asegurándose de manejar NaN, None y valores inválidos."""
@@ -173,9 +171,6 @@ def safe_str(value, default=""):
     return str(value).strip()
 
 
-import os
-import shutil
-import datetime
 
 
 def mover_archivo(directorio_origen=None, nombre_archivo_origen="Entregas", extension_origen="xlsx",
@@ -190,7 +185,9 @@ def mover_archivo(directorio_origen=None, nombre_archivo_origen="Entregas", exte
 
 	# Verificar si el archivo existe
 	if not os.path.exists(archivo_origen):
-		print(f"El archivo {archivo_origen} no existe.")
+		# print(f"El archivo {archivo_origen} no existe.")
+		log_grabar(f"El archivo {archivo_origen} no existe - mover_archivo()",
+		           config_logistica.dir_log)
 		return False
 
 	# Si no se especifica directorio de origen, usar el del ejecutable
@@ -214,8 +211,10 @@ def mover_archivo(directorio_origen=None, nombre_archivo_origen="Entregas", exte
 	# Mover el archivo
 	try:
 		shutil.move(archivo_origen, archivo_destino)
-		print(f"Archivo movido a: {archivo_destino}")
+		# print(f"rchivo movido a: {archivo_destino}")
+		log_grabar(f"Archivo movido a: {archivo_destino} - mover_archivo()",
+		           config_logistica.dir_log)
 		return True
 	except Exception as e:
-		print(f"Error al mover el archivo: {e}")
+		log_grabar(f"Error al mover el archivo: {e} - mover_archivo()", config_logistica.dir_log)
 		return False

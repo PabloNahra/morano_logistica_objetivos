@@ -30,7 +30,7 @@ def obtener_nuevo_nro_proceso(sql_server, sql_db, sql_user, sql_pass):
         return nuevo_nro_proceso
 
     except Exception as e:
-        print(f"Error en la consulta: {e}")
+        funciones_generales.log_grabar(f"Error en la consulta: {e} - obtener_nuevo_nro_proceso()", config_logistica.dir_log)
         return None
 
     finally:
@@ -115,7 +115,8 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_
 		conexion.commit()
 
 	except Exception as e:
-		print(f"Error en la operación: {e}")
+		funciones_generales.log_grabar(f"Error en la operación: {e} - insert_datos_excel()",
+		                               config_logistica.dir_log)
 		conexion.rollback()
 
 	finally:

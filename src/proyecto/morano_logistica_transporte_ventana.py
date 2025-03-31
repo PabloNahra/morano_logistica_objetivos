@@ -12,7 +12,6 @@ import funciones_generales, func_baseintermedia, func_bejerman
 import tkinter as tk
 from tkinter import ttk
 
-
 def actualizar_progreso(progreso, ventana, porcentaje):
 	progreso["value"] = porcentaje
 	ventana.update_idletasks()
@@ -51,6 +50,7 @@ def ejecutar_proceso():
 		actualizar_progreso(progreso, ventana, 10)
 
 		# Número de Proceso
+		funciones_generales.log_grabar('nro_proceso - inicio - ejecutar_proceso()', config_logistica.dir_log)
 		nro_proceso = func_baseintermedia.obtener_nuevo_nro_proceso(sql_server=config_logistica.sql_server_int,
 		                                                            sql_db=config_logistica.sql_db_int,
 		                                                            sql_user=config_logistica.sql_user_int,
@@ -58,11 +58,13 @@ def ejecutar_proceso():
 		actualizar_progreso(progreso, ventana, 30)
 
 		# Toma el Excel del directorio
+		funciones_generales.log_grabar('ruta_archivo - inicio - ejecutar_proceso()', config_logistica.dir_log)
 		ruta_archivo = os.path.join(config_logistica.dir_lista_entrega, config_logistica.archivo_entrega)
 		lista_entregas = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo, titulo=0, datos=0)
 		actualizar_progreso(progreso, ventana, 50)
 
 		# Copia datos del excel a tabla intermedia
+		funciones_generales.log_grabar('lista_entregas_filt - inicio - ejecutar_proceso()', config_logistica.dir_log)
 		lista_entregas_filt = func_baseintermedia.insert_datos_excel(sql_server=config_logistica.sql_server_int,
 		                                                             sql_db=config_logistica.sql_db_int,
 		                                                             sql_user=config_logistica.sql_user_int,
@@ -72,6 +74,8 @@ def ejecutar_proceso():
 		actualizar_progreso(progreso, ventana, 70)
 
 		# Actualiza datos en Bejerman
+		funciones_generales.log_grabar('list_entregas_actualizar - inicio - ejecutar_proceso()',
+		                               config_logistica.dir_log)
 		list_entregas_actualizar = func_bejerman.actualizar_datos_adicionales_sb(
 			sql_server=config_logistica.sql_server_sb,
 			sql_db=config_logistica.sql_db_sb,
@@ -81,6 +85,7 @@ def ejecutar_proceso():
 		actualizar_progreso(progreso, ventana, 90)
 
 		# Mueve el archivo a procesados o NO procesados
+		funciones_generales.log_grabar('mover_archivo - inicio - ejecutar_proceso()', config_logistica.dir_log)
 		if len(list_entregas_actualizar) != 0:
 			funciones_generales.mover_archivo(directorio_origen=config_logistica.dir_lista_entrega,
 			                                  nombre_archivo_origen=config_logistica.archivo_entrega,
@@ -100,16 +105,14 @@ def ejecutar_proceso():
 			                                  incluye_fecha=config_logistica.dir_archivo_proc_incluye_fecha)
 			mensaje_final = (f"El proceso terminó con INCONVENIENTES")
 
-
 		actualizar_progreso(progreso, ventana, 100)
 
 	except Exception as e:
-		funciones_generales.log_grabar(f'ERROR - Termino programa - Exception: {e}', config_logistica.dir_log)
+		funciones_generales.log_grabar(f'ERROR - Termino programa - Exception: {e} - ejecutar_proceso()', config_logistica.dir_log)
 		funciones_generales.envio_mail(config_logistica.mail_from,
 		                               config_logistica.mail_to,
 		                               config_logistica.mail_subject, '',
 		                               f'Mensaje: {e}')
-
 		funciones_generales.mover_archivo(directorio_origen=config_logistica.dir_lista_entrega,
 		                                  nombre_archivo_origen=config_logistica.archivo_entrega,
 		                                  extension_origen="xlsx",
@@ -118,10 +121,10 @@ def ejecutar_proceso():
 		mensaje_final = (f"El proceso terminó con INCONVENIENTES: {e}")
 
 	finally:
-		funciones_generales.log_grabar('Logistica Transporte - Integracion - Fin', config_logistica.dir_log)
+		funciones_generales.log_grabar('Logistica Transporte - Integracion - Fin - ejecutar_proceso()',
+		                               config_logistica.dir_log)
 		mostrar_mensaje_final(ventana, mensaje_final)
 		ventana.mainloop()
-
 
 if __name__ == "__main__":
 	ejecutar_proceso()

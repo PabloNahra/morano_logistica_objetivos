@@ -78,7 +78,8 @@ def actualizar_datos_adicionales_sb(sql_server, sql_db, sql_user, sql_pass, list
 			conexion.commit()
 
 	except Exception as e:
-		print(f"Error en la operación: {e}")
+		funciones_generales.log_grabar(f"Error en la operación: {e} - actualizar_datos_adicionales_sb()",
+		                               config_logistica.dir_log)
 		conexion.rollback()
 
 	finally:
