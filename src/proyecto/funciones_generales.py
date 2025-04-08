@@ -26,8 +26,42 @@ def log_grabar(texto, dir_log):
 
     return 0
 
+import pandas as pd
 
 def leer_excel_y_convertir_a_lista(nombre_archivo_excel, titulo=0, datos=1):
+    """
+    Lee un archivo Excel y lo convierte en una lista de diccionarios, deteniéndose en la primera fila completamente vacía.
+
+    :param nombre_archivo_excel: Nombre del archivo Excel (sin extensión)
+    :param titulo: Número de fila donde se encuentran los títulos (base 0)
+    :param datos: Número de fila donde comienzan los datos (base 0)
+    :return: Lista de diccionarios con los datos del Excel o None en caso de error.
+    """
+    nombre_archivo = nombre_archivo_excel + ".xlsx"
+
+    try:
+        # Leer el archivo Excel con la fila de títulos y saltando las filas innecesarias
+        df = pd.read_excel(nombre_archivo, header=titulo, skiprows=datos)
+
+        # Convertir el DataFrame en una lista de diccionarios, pero solo hasta la primera fila vacía
+        lista_resultante = []
+        for _, row in df.iterrows():
+            if row.isnull().all():  # Si TODAS las columnas de la fila están vacías, detener la lectura
+                break
+            lista_resultante.append(row.to_dict())
+
+        return lista_resultante
+
+    except FileNotFoundError:
+        log_grabar(f"Error: No se pudo encontrar el archivo {nombre_archivo} - leer_excel_y_convertir_a_lista()",
+                   config_logistica.dir_log)
+        return None
+    except Exception as e:
+        log_grabar(f"Error: {e} - leer_excel_y_convertir_a_lista()",
+                   config_logistica.dir_log)
+        return None
+
+def leer_excel_y_convertir_a_lista_old(nombre_archivo_excel, titulo=0, datos=1):
     """
     Lee un archivo Excel y lo convierte en una lista de diccionarios.
 
