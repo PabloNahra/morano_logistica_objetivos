@@ -26,8 +26,6 @@ def log_grabar(texto, dir_log):
 
     return 0
 
-import pandas as pd
-
 def leer_excel_y_convertir_a_lista(nombre_archivo_excel, titulo=0, datos=1):
     """
     Lee un archivo Excel y lo convierte en una lista de diccionarios, deteniéndose en la primera fila completamente vacía.
