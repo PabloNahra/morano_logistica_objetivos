@@ -28,9 +28,10 @@
     "directorio_lista_entrega": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos",
     "archivo_entrega": "Entregas",
     "tabla_datosexcel": "tblLogistica_EntregaTransporte",
-    "comprobantes_rt": "('RTS','RTM')",
+    "comprobantes_rt": "('RTS','RTM','RTD')",
     "dir_archivo_procesado": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\Procesados",
     "dir_archivo_no_procesado": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\NO_Procesados",
-    "dir_archivo_proc_incluye_fecha": 1
+    "dir_archivo_proc_incluye_fecha": 1,
+    "dias_hacia_atras": 120
   }
 }

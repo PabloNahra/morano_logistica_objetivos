@@ -1,8 +1,9 @@
 import config_logistica,funciones_generales
 import pyodbc
+from datetime import datetime, timedelta
 
 
-def actualizar_datos_adicionales_sb(sql_server, sql_db, sql_user, sql_pass, list_entregas_filt):
+def actualizar_datos_adicionales_sb(sql_server, sql_db, sql_user, sql_pass, list_entregas_filt, dias_hacia_atras):
 	"""
 	Realiza un INSERT o UPDATE en la tabla DtsSegCabV.
 
@@ -11,6 +12,7 @@ def actualizar_datos_adicionales_sb(sql_server, sql_db, sql_user, sql_pass, list
 	:param sql_user: Usuario de SQL Server.
 	:param sql_pass: Contraseña de SQL Server.
 	:param list_entregas_filt: Lista de diccionarios con los datos de las entregas.
+	:param dias_hacia_atras: Cantidad de dias hacia atras que vamos a incluir comprobantes en la búsqueda.
 	"""
 	try:
 		# Conexión con SQL Server
@@ -24,10 +26,19 @@ def actualizar_datos_adicionales_sb(sql_server, sql_db, sql_user, sql_pass, list
 		# Obtener scv_id para cada remito
 		for ent in list_entregas_filt:
 			remito_padded = funciones_generales.safe_str(funciones_generales.safe_int(ent.get('Remito'))).zfill(8)  # RIGHT( "00000000" & remito, 8)
+
+			# Calcular la fecha desde
+			fecha_desde = datetime.now() - timedelta(days=dias_hacia_atras)
+			# Formatear en formato AAAAMMDD
+			fecha_desde_varchar = fecha_desde.strftime('%Y%m%d')
+
 			# cursor.execute("SELECT scv_id FROM SegTiposV WHERE spv_nro = ?", remito_padded)
 			cursor.execute(f"SELECT TOP 1 spvscv_id, spvemp_codigo, spvsuc_cod  "
-			               "FROM SegTiposV WHERE spv_nro = ? "
+			               "FROM SegTiposV "
+			               "LEFT JOIN SegCabV ON spvscv_ID = scv_id "
+			               "WHERE spv_nro = ? "
 			               f"AND spvtco_Cod IN {config_logistica.comprobantes_rt} "
+			               f"AND CONVERT(VARCHAR(8), scv_femision, 112) > '{fecha_desde_varchar}' "
 			               "ORDER BY spvscv_id desc", remito_padded)
 			row = cursor.fetchone()
 			if row:

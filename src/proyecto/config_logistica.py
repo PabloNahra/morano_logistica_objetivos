@@ -73,3 +73,4 @@ comprobantes_rt = json_data['parametros_negocio']['comprobantes_rt']
 dir_archivo_procesado = Path(json_data['parametros_negocio']['dir_archivo_procesado'])
 dir_archivo_no_procesado = Path(json_data['parametros_negocio']['dir_archivo_no_procesado'])
 dir_archivo_proc_incluye_fecha = json_data['parametros_negocio']['dir_archivo_proc_incluye_fecha']
+dias_hacia_atras = json_data['parametros_negocio']['dias_hacia_atras']
