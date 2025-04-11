@@ -37,7 +37,7 @@ def obtener_nuevo_nro_proceso(sql_server, sql_db, sql_user, sql_pass):
         cursor.close()
         conexion.close()
 
-def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_entregas):
+def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_entregas, transp_perm):
 	"""
 	Inserta registros en la tabla intermedia de SQL Server de manera masiva.
 
@@ -47,6 +47,12 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_
 	:param sql_pass: Contraseña de SQL Server.
 	:param nro_proceso: Número de proceso
 	:param list_entregas: Lista de diccionarios con los datos de las entregas
+	:param transp_perm: Listado de Nombres de transportes permitidos
+
+	:return list_entregas_filtrada: Lista de diccionarios con los datos de las entregas que se deben
+	integrar en principio
+	:return list_entregas_no_integrar: Lista de diccionarios con los datos de las entregas que no se integran por
+	diversos controles como número duplicado o empresa no permitida
 	"""
 	try:
 		# Conexión con SQL Server
@@ -61,11 +67,23 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_
 		# Filtrar duplicados basados en 'Remito'
 		remitos_vistos = set()
 		list_entregas_filtrada = []
+		list_entregas_no_integrar = []
+		transp_perm_lower = {tp.lower() for tp in transp_perm}
 		for ent in list_entregas:
 			remito_valor = funciones_generales.safe_str(funciones_generales.safe_int(ent.get('Remito')))  # Convertir a int y luego a str
-			if remito_valor not in remitos_vistos:
+			transporte = funciones_generales.safe_str(ent.get('Cliente')).lower()
+			# Si repite la numercación no lo integro
+			if remito_valor in remitos_vistos:
+				ent['MOTIVO'] = 'DUPLICADO'
+				list_entregas_no_integrar.append(ent)
+			# Si el transporte no está dentro de los permitidos NO lo integro
+			elif transporte not in transp_perm_lower:
+				ent['MOTIVO'] = 'TRANSPORTE NO PERMITIDO'
+				list_entregas_no_integrar.append(ent)
+			else:
 				remitos_vistos.add(remito_valor)
 				list_entregas_filtrada.append(ent)
+
 
 		# Listas para inserciones y actualizaciones masivas
 		datos_insert = []
@@ -127,7 +145,7 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_
 		if 'conexion' in locals():  # Verifica si conexión existe antes de cerrarla
 			conexion.close()
 
-	return list_entregas_filtrada  # Retornar la lista filtrada
+	return list_entregas_filtrada, list_entregas_no_integrar
 
 
 def insert_datos_excel_old(sql_server, sql_db, sql_user, sql_pass, nro_proceso,list_entregas):

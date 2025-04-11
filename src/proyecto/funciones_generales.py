@@ -89,7 +89,79 @@ def leer_excel_y_convertir_a_lista_old(nombre_archivo_excel, titulo=0, datos=1):
                    config_logistica.dir_log)
         return None
 
+import pandas as pd
+import os
+from datetime import datetime as hora
+
 def exportacion_archivo(lista_diccionarios, nombre_archivo,
+                        campo_orden=None, incl_fecha=False,
+                        tipo_archivo='excel', directorio=None,
+                        user=None, password=None, server=None, share=None,
+                        orden_campos=None):
+    '''
+    :param lista_diccionarios: Cada diccionario es un registro
+    :param nombre_archivo: Nombre al exportar el archivo
+    :param campo_orden: Campo por el que se ordenarán los registros
+    :param incl_fecha: Si el nombre del archivo va a incluir o no la fecha de generación del mismo
+    :param tipo_archivo: 'excel' o 'csv'
+    :param orden_campos: Lista con los nombres de los campos para ordenar las columnas en la exportación
+    :return: Ruta del archivo exportado
+    '''
+
+    # Crear un DataFrame a partir de la lista de diccionarios
+    df = pd.DataFrame(lista_diccionarios)
+
+    # Ordenar la lista si se proporciona un campo de orden
+    if campo_orden:
+        if campo_orden in df.columns:
+            df = df.sort_values(by=campo_orden)
+    else:
+        # Si campo_orden es None, ordenar por la primera clave del primer diccionario
+        if lista_diccionarios:
+            primer_diccionario = lista_diccionarios[0]
+            primer_clave = list(primer_diccionario.keys())[0]
+            df = df.sort_values(by=primer_clave)
+
+    # Reordenar columnas según orden_campos si está definido
+    if orden_campos:
+        orden_campos_lower = [campo.lower() for campo in orden_campos]  # Convertimos a minúsculas
+        columnas_actuales = list(df.columns)
+
+        # Separar las columnas que están en orden_campos y las que no
+        columnas_ordenadas = [col for col in columnas_actuales if col.lower() in orden_campos_lower]
+        columnas_restantes = [col for col in columnas_actuales if col.lower() not in orden_campos_lower]
+
+        # Reordenar DataFrame con las columnas ordenadas primero
+        df = df[columnas_ordenadas + columnas_restantes]
+
+    # Agregar fecha y hora al nombre del archivo si incl_fecha es True
+    nombre_archivo_con_fecha = nombre_archivo
+    if incl_fecha:
+        fecha_hora_actual = hora.now().strftime('%Y_%m_%d_%H_%M_%S')
+        nombre_archivo_con_fecha = f"{nombre_archivo}_{fecha_hora_actual}"
+
+    # Determinar el directorio de destino
+    if directorio:
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
+        archivo = os.path.join(directorio, nombre_archivo_con_fecha)
+    else:
+        archivo = nombre_archivo_con_fecha
+
+    # Exportar el DataFrame a un archivo CSV o Excel según el tipo de archivo especificado
+    if tipo_archivo == 'csv':
+        archivo += ".csv"
+        df.to_csv(archivo, index=False, sep=';')
+    elif tipo_archivo == 'excel':
+        archivo += ".xlsx"
+        df.to_excel(archivo, index=False)
+    else:
+        raise ValueError("Tipo de archivo no válido. Debe ser 'csv' o 'excel'.")
+
+    return archivo
+
+
+def exportacion_archivo_OLD(lista_diccionarios, nombre_archivo,
                         campo_orden=None, incl_fecha=False,
                         tipo_archivo='excel', directorio=None,
                         user=None, password=None, server=None, share=None):

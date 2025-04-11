@@ -51,6 +51,15 @@ def actualizar_datos_adicionales_sb(sql_server, sql_db, sql_user, sql_pass, list
 		# Filtrar registros válidos
 		list_entregas_actualizar = [ent for ent in list_entregas_filt if ent['scv_id'] is not None]
 
+		# Filtro los registros NO válidos porque NO encontramos el comprobante
+		list_entregas_NO_actu = [ent for ent in list_entregas_filt if ent['scv_id'] is None]
+
+		if len(list_entregas_NO_actu) != 0:
+			list_entregas_NO_actu_Con_Motivo = []
+			for ent_NO in list_entregas_NO_actu:
+				ent_NO['MOTIVO'] = 'COMPROBANTE RT NO ENCONTRADO'
+				list_entregas_NO_actu_Con_Motivo.append(ent_NO)
+
 		# Listas para inserciones y actualizaciones
 		datos_upsert = []
 		for ent in list_entregas_actualizar:
@@ -60,28 +69,33 @@ def actualizar_datos_adicionales_sb(sql_server, sql_db, sql_user, sql_pass, list
 				ent['suc_cod'],
 				ent.get('Entrega Efectiva'),
 				ent.get('Retiro Efectivo'),
-				ent.get('Retiro Generada')
+				ent.get('Retiro Generada'),
+				ent.get('Cliente')
 			))
 
 		# Sentencia MERGE para hacer INSERT o UPDATE
 		sql_merge = f'''
             MERGE INTO DtsSegCabV AS target
-            USING (VALUES (?, ?, ?, ?, ?, ?)) AS source 
+            USING (VALUES (?, ?, ?, ?, ?, ?, ?)) AS source 
             (scv_id, scvemp_Codigo, scvsuc_Cod,
-            Dscv_TrEntregaEfec, Dscv_TrRetiroEfec, Dscv_TrRetiroGenerado)
+            Dscv_TrEntregaEfec, Dscv_TrRetiroEfec, Dscv_TrRetiroGenerado,
+            Dscv_TrTransporte)
             ON target.scv_id = source.scv_id
             WHEN MATCHED THEN 
                 UPDATE SET 
                     Dscv_TrEntregaEfec = source.Dscv_TrEntregaEfec,
                     Dscv_TrRetiroEfec = source.Dscv_TrRetiroEfec,
-                    Dscv_TrRetiroGenerado = source.Dscv_TrRetiroGenerado
+                    Dscv_TrRetiroGenerado = source.Dscv_TrRetiroGenerado,
+                    Dscv_TrTransporte = source.Dscv_TrTransporte
             WHEN NOT MATCHED THEN
                 INSERT 
                 (scv_id, scvemp_Codigo, scvsuc_Cod, 
-                Dscv_TrEntregaEfec, Dscv_TrRetiroEfec, Dscv_TrRetiroGenerado)
+                Dscv_TrEntregaEfec, Dscv_TrRetiroEfec, Dscv_TrRetiroGenerado,
+                Dscv_TrTransporte)
                 VALUES 
                 (source.scv_id, source.scvemp_codigo, source.scvsuc_cod, 
-                source.Dscv_TrEntregaEfec, source.Dscv_TrRetiroEfec, source.Dscv_TrRetiroGenerado);
+                source.Dscv_TrEntregaEfec, source.Dscv_TrRetiroEfec, source.Dscv_TrRetiroGenerado,
+                source.Dscv_TrTransporte);
         '''
 
 		if datos_upsert:
@@ -97,4 +111,4 @@ def actualizar_datos_adicionales_sb(sql_server, sql_db, sql_user, sql_pass, list
 		cursor.close()
 		conexion.close()
 
-	return list_entregas_actualizar  # Retorna la lista con scv_id encontrados
+	return list_entregas_actualizar, list_entregas_NO_actu_Con_Motivo

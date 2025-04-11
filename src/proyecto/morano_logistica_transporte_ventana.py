@@ -116,21 +116,23 @@ def ejecutar_proceso():
         lista_entregas = funciones_generales.leer_excel_y_convertir_a_lista(ruta_archivo, titulo=0, datos=0)
         actualizar_progreso(progreso, ventana, 50)
 
-        # Insertar datos en tabla intermedia
+        # Insertar datos en tabla intermedia y tengo dos listas, las a integrar y la NO a integrar
         funciones_generales.log_grabar('lista_entregas_filt - inicio - ejecutar_proceso()', config_logistica.dir_log)
-        lista_entregas_filt = func_baseintermedia.insert_datos_excel(
+        lista_entregas_filt, list_ent_no_integrar = func_baseintermedia.insert_datos_excel(
             sql_server=config_logistica.sql_server_int,
             sql_db=config_logistica.sql_db_int,
             sql_user=config_logistica.sql_user_int,
             sql_pass=config_logistica.sql_pass_int,
             nro_proceso=nro_proceso,
-            list_entregas=lista_entregas
+            list_entregas=lista_entregas,
+            transp_perm=config_logistica.transportes_permitidos
         )
         actualizar_progreso(progreso, ventana, 70)
 
         # Actualizar datos en Bejerman
         funciones_generales.log_grabar('list_entregas_actualizar - inicio - ejecutar_proceso()', config_logistica.dir_log)
-        list_entregas_actualizar = func_bejerman.actualizar_datos_adicionales_sb(
+        # Inserto los que deben insertarse y listamos los que se actualizar y los que NO
+        list_entregas_actualizar, list_ent_NO_actu = func_bejerman.actualizar_datos_adicionales_sb(
             sql_server=config_logistica.sql_server_sb,
             sql_db=config_logistica.sql_db_sb,
             sql_user=config_logistica.sql_user_sb,
@@ -150,10 +152,11 @@ def ejecutar_proceso():
                 directorio_exportar=config_logistica.dir_archivo_procesado,
                 incluye_fecha=config_logistica.dir_archivo_proc_incluye_fecha
             )
-            mensaje_final = (f"El proceso terminó exitosamente\n\n"
+            mensaje_final = (f"El archivo sé procesó\n\n"
                              f"Del total de {len(lista_entregas)} registros:\n"
                              f"Se actualizaron: {len(list_entregas_actualizar)}\n"
-                             f"NO se utilizaron: {len(lista_entregas) - len(list_entregas_actualizar)}")
+                             f"NO se utilizaron: {len(lista_entregas) - len(list_entregas_actualizar)} "
+                             f"(Revisar Detalle en Archivo)")
         else:
             funciones_generales.mover_archivo(
                 directorio_origen=config_logistica.dir_lista_entrega,
@@ -162,7 +165,19 @@ def ejecutar_proceso():
                 directorio_exportar=config_logistica.dir_archivo_no_procesado,
                 incluye_fecha=config_logistica.dir_archivo_proc_incluye_fecha
             )
-            mensaje_final = "El proceso terminó con INCONVENIENTES"
+            mensaje_final = "El archivo NO se procesó por INCONSISTENCIAS"
+
+        # Exportó el detalle de registros que NO pudieron procesarse
+        if len(list_ent_NO_actu) != 0 or len(list_ent_no_integrar) != 0:
+            listas_registros_no_procesados = list_ent_NO_actu + list_ent_no_integrar
+
+            funciones_generales.exportacion_archivo(lista_diccionarios=listas_registros_no_procesados,
+                                                    nombre_archivo=config_logistica.archivo_entrega,
+                                                    campo_orden='Motivo',
+                                                    incl_fecha=True,
+                                                    tipo_archivo='excel',
+                                                    directorio=config_logistica.dir_items_no_procesados,
+                                                    orden_campos=config_logistica.items_no_proc_orden_campos)
 
         actualizar_progreso(progreso, ventana, 100)
         mostrar_mensaje_final(ventana, mensaje_final)

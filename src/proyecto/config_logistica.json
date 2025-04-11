@@ -29,9 +29,13 @@
     "archivo_entrega": "Entregas",
     "tabla_datosexcel": "tblLogistica_EntregaTransporte",
     "comprobantes_rt": "('RTS','RTM','RTD')",
-    "dir_archivo_procesado": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\Procesados",
-    "dir_archivo_no_procesado": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\NO_Procesados",
+    "dir_archivo_procesado": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\Procesado",
+    "dir_archivo_no_procesado": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\NO_Procesado",
+    "dir_items_no_procesados": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\Items_NO_Procesados",
+    "items_no_proc_orden_campos": ["MOTIVO","Cliente", "Remito", "Destinatario", "Domicilio", "Provincia", "Ciudad",
+    "Codigo Postal", "Retiro Generada", "Retiro Efectivo", "Entrega Efectiva", "Tipo de Entrega", "Cantidad de Bulto"],
     "dir_archivo_proc_incluye_fecha": 1,
-    "dias_hacia_atras": 120
+    "dias_hacia_atras": 60,
+    "transportes_permitidos": ["SUBURBANO", "PROPIO"]
   }
 }
