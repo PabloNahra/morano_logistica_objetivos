@@ -169,9 +169,9 @@ def ejecutar_proceso():
 
         # Exportó el detalle de registros que NO pudieron procesarse
         if len(list_ent_NO_actu) != 0 or len(list_ent_no_integrar) != 0:
-            listas_registros_no_procesados = list_ent_NO_actu + list_ent_no_integrar
+            listas_registros_no_proc = list_ent_NO_actu + list_ent_no_integrar
 
-            funciones_generales.exportacion_archivo(lista_diccionarios=listas_registros_no_procesados,
+            funciones_generales.exportacion_archivo(lista_diccionarios=listas_registros_no_proc,
                                                     nombre_archivo=config_logistica.archivo_entrega,
                                                     campo_orden='Motivo',
                                                     incl_fecha=True,
