@@ -26,18 +26,17 @@
   },
   "parametros_negocio": {
     "tabla_datosexcel": "tblLogist_Objetivos_Generales",
+    "tabla_datos_usuarios": "tblPBI_WMS_USUARIOS",
+    "tabla_objetivos_usuarios": "tblLogist_Objetivos_Usuarios",
     "directorio_planilla_objetivos": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos",
     "planilla_objetivos": "Logistica_Objetivos",
+    "planilla_objetivos_usuarios": "Logistica_Objetivos_Usuarios",
     "tareas_permitidas": ["PICK", "EMP"],
     "tipos_tareas_permitidas": ["SKU", "PEDIDOS"],
     "dir_archivo_procesado": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\Procesado",
     "dir_archivo_no_procesado": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\NO_Procesado",
     "dir_items_no_procesados": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\Items_NO_Procesados",
     "items_no_proc_orden_campos": ["MOTIVO","FECHA", "TAREA", "TIPO_TAREA", "OBJETIVO"],
-    "dir_archivo_proc_incluye_fecha": 1,
-
-    "comprobantes_rt": "('RTS','RTM','RTD')",
-    "dias_hacia_atras": 60
-
+    "dir_archivo_proc_incluye_fecha": 1
   }
 }

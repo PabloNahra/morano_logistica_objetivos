@@ -52,6 +52,9 @@ sql_user_int = fernet.decrypt(sql_user_int_encrypted_password).decode()
 sql_pass_int_encrypted_password = json_data['cred_SQL_intermedio']['sql_pass_int'].encode()
 sql_pass_int = fernet.decrypt(sql_pass_int_encrypted_password).decode()
 
+
+
+
 # Configuracion de envio de mails
 email_smtp = json_data['envio_mail']['email_smtp']
 email_port = json_data['envio_mail']['email_port']
@@ -67,8 +70,11 @@ mail_subject = json_data['envio_mail']['mail_subject']
 
 # Parametros de negocio
 tabla_datosexcel = json_data['parametros_negocio']['tabla_datosexcel']
+tabla_datos_usuarios = json_data['parametros_negocio']['tabla_datos_usuarios']
+tabla_objetivos_usuarios = json_data['parametros_negocio']['tabla_objetivos_usuarios']
 dir_planilla_objetivos = Path(json_data['parametros_negocio']['directorio_planilla_objetivos'])
 planilla_objetivos = json_data['parametros_negocio']['planilla_objetivos']
+planilla_objetivos_usuarios = json_data['parametros_negocio']['planilla_objetivos_usuarios']
 tareas_permitidas = json_data['parametros_negocio']['tareas_permitidas']
 tipos_tareas_permitidas = json_data['parametros_negocio']['tipos_tareas_permitidas']
 dir_archivo_procesado = Path(json_data['parametros_negocio']['dir_archivo_procesado'])
@@ -76,7 +82,3 @@ dir_archivo_no_procesado = Path(json_data['parametros_negocio']['dir_archivo_no_
 dir_items_no_procesados = Path(json_data['parametros_negocio']['dir_items_no_procesados'])
 items_no_proc_orden_campos = json_data['parametros_negocio']['items_no_proc_orden_campos']
 dir_archivo_proc_incluye_fecha = json_data['parametros_negocio']['dir_archivo_proc_incluye_fecha']
-
-comprobantes_rt = json_data['parametros_negocio']['comprobantes_rt']
-dias_hacia_atras = json_data['parametros_negocio']['dias_hacia_atras']
-
