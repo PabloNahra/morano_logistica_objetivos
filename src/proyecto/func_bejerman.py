@@ -1,4 +1,4 @@
-import config_logistica,funciones_generales
+import config_logist_obj,funciones_generales
 import pyodbc
 from datetime import datetime, timedelta
 

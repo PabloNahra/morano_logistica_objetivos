@@ -7,7 +7,7 @@ en datos adicionales de bejerman
 El Excel posee datos del transporte de envios a clientes
 '''
 import os
-import config_logistica
+import config_logist_obj
 import funciones_generales, func_baseintermedia, func_bejerman
 import tkinter as tk
 from tkinter import ttk

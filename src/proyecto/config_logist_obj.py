@@ -9,7 +9,7 @@ key_generada = "vCpxjxZ3RiFHUI6GDOozI-NXAebX1a8r2GnjVBBifnI=".encode()
 fernet = Fernet(key_generada)
 
 # Levanto las configuraciones del archivo .json
-with open('config_logistica.json', 'r') as file:
+with open('config_logist_obj.json', 'r') as file:
     # Lee el contenido del archivo JSON
     json_data = json.load(file)
 
@@ -66,14 +66,17 @@ mail_to = json_data['envio_mail']['mail_to']
 mail_subject = json_data['envio_mail']['mail_subject']
 
 # Parametros de negocio
-dir_lista_entrega = Path(json_data['parametros_negocio']['directorio_lista_entrega'])
-archivo_entrega = json_data['parametros_negocio']['archivo_entrega']
 tabla_datosexcel = json_data['parametros_negocio']['tabla_datosexcel']
-comprobantes_rt = json_data['parametros_negocio']['comprobantes_rt']
+dir_planilla_objetivos = Path(json_data['parametros_negocio']['directorio_planilla_objetivos'])
+planilla_objetivos = json_data['parametros_negocio']['planilla_objetivos']
+tareas_permitidas = json_data['parametros_negocio']['tareas_permitidas']
+tipos_tareas_permitidas = json_data['parametros_negocio']['tipos_tareas_permitidas']
 dir_archivo_procesado = Path(json_data['parametros_negocio']['dir_archivo_procesado'])
 dir_archivo_no_procesado = Path(json_data['parametros_negocio']['dir_archivo_no_procesado'])
 dir_items_no_procesados = Path(json_data['parametros_negocio']['dir_items_no_procesados'])
 items_no_proc_orden_campos = json_data['parametros_negocio']['items_no_proc_orden_campos']
 dir_archivo_proc_incluye_fecha = json_data['parametros_negocio']['dir_archivo_proc_incluye_fecha']
+
+comprobantes_rt = json_data['parametros_negocio']['comprobantes_rt']
 dias_hacia_atras = json_data['parametros_negocio']['dias_hacia_atras']
-transportes_permitidos = json_data['parametros_negocio']['transportes_permitidos']
+

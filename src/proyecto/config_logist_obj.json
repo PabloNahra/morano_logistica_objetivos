@@ -1,7 +1,7 @@
 {
   "generales": {
     "timezone": "America/Argentina/Buenos_Aires",
-    "directorio_log": "logistica_int_log.txt"
+    "directorio_log": "logistica_objetivos_log.txt"
   },
   "cred_SQL_bejerman": {
     "sql_server_sb": "gAAAAABn4tZXtRZhsVkLRgLuliyi90e-66JBbPyiyaKaFtAuJkhaCBOGVEw9fy7x1bUcLF8_rx5ICdur6uP6zixVVI7cy3j2Gw==",
@@ -22,20 +22,22 @@
     "email_password": "gAAAAABn4tlb5-oJBKIN_7tTe6bOw6MTGzMypuwLI6LjhPCynmOXJxYeNNFq4-iLvuDjwtAuzfzPau2hJwS93cLqBNsvYBJhew==",
     "mail_from":  "noreply@satrendy.net",
     "mail_to":  "pablonahra@pnahra.com",
-    "mail_subject": "INCONVENIENTE: Morano - Logistica"
+    "mail_subject": "INCONVENIENTE: Morano - Logistica - Objetivos"
   },
   "parametros_negocio": {
-    "directorio_lista_entrega": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos",
-    "archivo_entrega": "Entregas",
-    "tabla_datosexcel": "tblLogistica_EntregaTransporte",
-    "comprobantes_rt": "('RTS','RTM','RTD')",
-    "dir_archivo_procesado": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\Procesado",
-    "dir_archivo_no_procesado": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\NO_Procesado",
-    "dir_items_no_procesados": "C:\\mis_entornos\\morano_logistica\\src\\proyecto\\Archivos\\Items_NO_Procesados",
-    "items_no_proc_orden_campos": ["MOTIVO","Cliente", "Remito", "Destinatario", "Domicilio", "Provincia", "Ciudad",
-    "Codigo Postal", "Retiro Generada", "Retiro Efectivo", "Entrega Efectiva", "Tipo de Entrega", "Cantidad de Bulto"],
+    "tabla_datosexcel": "tblLogist_Objetivos_Generales",
+    "directorio_planilla_objetivos": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos",
+    "planilla_objetivos": "Logistica_Objetivos",
+    "tareas_permitidas": ["PICK", "EMP"],
+    "tipos_tareas_permitidas": ["SKU", "PEDIDOS"],
+    "dir_archivo_procesado": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\Procesado",
+    "dir_archivo_no_procesado": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\NO_Procesado",
+    "dir_items_no_procesados": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\Items_NO_Procesados",
+    "items_no_proc_orden_campos": ["MOTIVO","FECHA", "TAREA", "TIPO_TAREA", "OBJETIVO"],
     "dir_archivo_proc_incluye_fecha": 1,
-    "dias_hacia_atras": 60,
-    "transportes_permitidos": ["SUBURBANO", "PROPIO"]
+
+    "comprobantes_rt": "('RTS','RTM','RTD')",
+    "dias_hacia_atras": 60
+
   }
 }

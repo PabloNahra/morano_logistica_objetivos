@@ -5,10 +5,9 @@ from email.message import EmailMessage
 import pandas as pd
 import os
 import math
-import config_logistica
+import config_logist_obj
 import shutil
 import datetime
-
 
 def obtener_hora_actual():
     hora_actual = hora.now().time()
@@ -52,46 +51,14 @@ def leer_excel_y_convertir_a_lista(nombre_archivo_excel, titulo=0, datos=1):
 
     except FileNotFoundError:
         log_grabar(f"Error: No se pudo encontrar el archivo {nombre_archivo} - leer_excel_y_convertir_a_lista()",
-                   config_logistica.dir_log)
+                   config_logist_obj.dir_log)
         return None
     except Exception as e:
         log_grabar(f"Error: {e} - leer_excel_y_convertir_a_lista()",
-                   config_logistica.dir_log)
+                   config_logist_obj.dir_log)
         return None
 
-def leer_excel_y_convertir_a_lista_old(nombre_archivo_excel, titulo=0, datos=1):
-    """
-    Lee un archivo Excel y lo convierte en una lista de diccionarios.
 
-    :param nombre_archivo_excel: Nombre del archivo Excel (sin extensión)
-    :param titulo: Número de fila donde se encuentran los títulos (base 0)
-    :param datos: Número de fila donde comienzan los datos (base 0)
-    :return: Lista de diccionarios con los datos del Excel o None en caso de error.
-    """
-    nombre_archivo = nombre_archivo_excel + ".xlsx"
-
-    try:
-        # Leer el archivo Excel con la fila de títulos y saltando las filas innecesarias
-        # df = pd.read_excel(nombre_archivo, header=titulo, skiprows=range(0, datos))
-        df = pd.read_excel(nombre_archivo, header=titulo, skiprows=datos)
-
-        # Convertir el DataFrame en una lista de diccionarios
-        lista_resultante = df.to_dict(orient="records")
-
-        return lista_resultante
-
-    except FileNotFoundError:
-        log_grabar(f"Error: No se pudo encontrar el archivo {nombre_archivo} - leer_excel_y_convertir_a_lista()",
-                   config_logistica.dir_log)
-        return None
-    except Exception as e:
-        log_grabar(f"Error: {e} - leer_excel_y_convertir_a_lista()",
-                   config_logistica.dir_log)
-        return None
-
-import pandas as pd
-import os
-from datetime import datetime as hora
 
 def exportacion_archivo(lista_diccionarios, nombre_archivo,
                         campo_orden=None, incl_fecha=False,
@@ -317,7 +284,7 @@ def mover_archivo(directorio_origen=None, nombre_archivo_origen="Entregas", exte
 		shutil.move(archivo_origen, archivo_destino)
 		# print(f"rchivo movido a: {archivo_destino}")
 		log_grabar(f"Archivo movido a: {archivo_destino} - mover_archivo()",
-		           config_logistica.dir_log)
+		           config_logist_obj.dir_log)
 		return True
 	except Exception as e:
 		log_grabar(f"Error al mover el archivo: {e} - mover_archivo()", config_logistica.dir_log)
