@@ -37,6 +37,7 @@
     "dir_archivo_no_procesado": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\NO_Procesado",
     "dir_items_no_procesados": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\Items_NO_Procesados",
     "items_no_proc_orden_campos": ["MOTIVO","FECHA", "TAREA", "TIPO_TAREA", "OBJETIVO"],
+    "items_no_proc_orden_campos_usuarios": ["MOTIVO","FECHA", "TAREA", "TIPO_TAREA", "USUARIO_NOMBRE","OBJETIVO"],
     "dir_archivo_proc_incluye_fecha": 1
   }
 }

@@ -261,13 +261,13 @@ def ejecutar_proceso():
         actualizar_progreso(progreso, ventana, 90)
 
         # Mover archivo a procesados o no procesados
-        funciones_generales.log_grabar('mover_archivo - inicio - ejecutar_proceso()',
+        funciones_generales.log_grabar('mover_archivo usuarios - inicio - ejecutar_proceso()',
                                        config_logist_obj.dir_log)
         # if len(list_entregas_actualizar) != 0:
         if len(lista_obj_filt) != 0:
             funciones_generales.mover_archivo(
                 directorio_origen=config_logist_obj.dir_planilla_objetivos,
-                nombre_archivo_origen=config_logist_obj.planilla_objetivos,
+                nombre_archivo_origen=config_logist_obj.planilla_objetivos_usuarios,
                 extension_origen="xlsx",
                 directorio_exportar=config_logist_obj.dir_archivo_procesado,
                 incluye_fecha=config_logist_obj.dir_archivo_proc_incluye_fecha
@@ -280,7 +280,7 @@ def ejecutar_proceso():
         else:
             funciones_generales.mover_archivo(
                 directorio_origen=config_logist_obj.dir_planilla_objetivos,
-                nombre_archivo_origen=config_logist_obj.planilla_objetivos,
+                nombre_archivo_origen=config_logist_obj.planilla_objetivos_usuarios,
                 extension_origen="xlsx",
                 directorio_exportar=config_logist_obj.dir_archivo_no_procesado,
                 incluye_fecha=config_logist_obj.dir_archivo_proc_incluye_fecha
@@ -292,12 +292,12 @@ def ejecutar_proceso():
             listas_registros_no_proc = list_obj_no_integrar
 
             funciones_generales.exportacion_archivo(lista_diccionarios=listas_registros_no_proc,
-                                                    nombre_archivo=config_logist_obj.planilla_objetivos,
+                                                    nombre_archivo=config_logist_obj.planilla_objetivos_usuarios,
                                                     campo_orden='Motivo',
                                                     incl_fecha=True,
                                                     tipo_archivo='excel',
                                                     directorio=config_logist_obj.dir_items_no_procesados,
-                                                    orden_campos=config_logist_obj.items_no_proc_orden_campos)
+                                                    orden_campos=config_logist_obj.items_no_proc_orden_campos_usuarios)
 
         actualizar_progreso(progreso, ventana, 100)
         mostrar_mensaje_final(ventana, mensaje_final)

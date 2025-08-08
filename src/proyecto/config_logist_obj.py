@@ -81,4 +81,5 @@ dir_archivo_procesado = Path(json_data['parametros_negocio']['dir_archivo_proces
 dir_archivo_no_procesado = Path(json_data['parametros_negocio']['dir_archivo_no_procesado'])
 dir_items_no_procesados = Path(json_data['parametros_negocio']['dir_items_no_procesados'])
 items_no_proc_orden_campos = json_data['parametros_negocio']['items_no_proc_orden_campos']
+items_no_proc_orden_campos_usuarios = json_data['parametros_negocio']['items_no_proc_orden_campos_usuarios']
 dir_archivo_proc_incluye_fecha = json_data['parametros_negocio']['dir_archivo_proc_incluye_fecha']
