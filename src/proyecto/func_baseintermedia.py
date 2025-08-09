@@ -2,7 +2,7 @@ import pyodbc
 import config_logist_obj
 import funciones_generales
 
-def obtener_nuevo_nro_proceso(sql_server, sql_db, sql_user, sql_pass):
+def obtener_nuevo_nro_proceso(sql_server, sql_db, sql_user, sql_pass, tabla):
     """
     Obtiene el valor máximo de Nro_Proceso en la tabla y le suma 1.
     Si la tabla está vacía o el valor es NULL, devuelve 1.
@@ -11,6 +11,8 @@ def obtener_nuevo_nro_proceso(sql_server, sql_db, sql_user, sql_pass):
     :param sql_db: Base de datos SQL Server.
     :param sql_user: Usuario de SQL Server.
     :param sql_pass: Contraseña de SQL Server.
+    :param tabla: Tabla a donde consultaremos el nro de proceso
+
     :return: Nuevo valor de Nro_Proceso.
     """
     try:
@@ -24,7 +26,7 @@ def obtener_nuevo_nro_proceso(sql_server, sql_db, sql_user, sql_pass):
         cursor = conexion.cursor()
 
         # Consulta para obtener el máximo Nro_Proceso
-        cursor.execute(f"SELECT ISNULL(MAX(Nro_Proceso), 0) + 1 FROM {config_logist_obj.tabla_datosexcel}")
+        cursor.execute(f"SELECT ISNULL(MAX(Nro_Proceso), 0) + 1 FROM {tabla}")
         nuevo_nro_proceso = cursor.fetchone()[0]
 
         return nuevo_nro_proceso

@@ -94,7 +94,7 @@ def ejecutar_proceso():
 	# =================================================================
 	if os.path.exists(ruta_generales):
 		ventana = tk.Tk()
-		ventana.title("Logistica - Objetivos - GENERALES - Actualizando")
+		ventana.title("LOGIST - OBJETIVOS - GENERALES - ACTUALIZANDO")
 		ventana.geometry("500x180")
 		ventana.resizable(False, False)
 		ventana.eval('tk::PlaceWindow . center')
@@ -217,7 +217,7 @@ def ejecutar_proceso():
 		funciones_generales.log_grabar('Logistica - Objetivos - Usuarios - Inicio',
 		                               config_logist_obj.dir_log)
 		ventana = tk.Tk()
-		ventana.title("Logistica - Objetivos - USUARIOS - Actualizando")
+		ventana.title("LOGIST - OBJ - USUARIOS - ACTU")
 		ventana.geometry("500x180")
 		ventana.resizable(False, False)
 		ventana.eval('tk::PlaceWindow . center')

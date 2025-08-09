@@ -34,7 +34,8 @@ def leer_excel_y_convertir_a_lista(nombre_archivo_excel, titulo=0, datos=1):
     :param datos: Número de fila donde comienzan los datos (base 0)
     :return: Lista de diccionarios con los datos del Excel o None en caso de error.
     """
-    nombre_archivo = nombre_archivo_excel + ".xlsx"
+    # nombre_archivo = nombre_archivo_excel + ".xlsx"
+    nombre_archivo = nombre_archivo_excel
 
     try:
         # Leer el archivo Excel con la fila de títulos y saltando las filas innecesarias
