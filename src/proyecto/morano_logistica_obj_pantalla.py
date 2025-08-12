@@ -7,7 +7,7 @@ de logística
 '''
 import os
 import config_logist_obj
-import funciones_generales, func_baseintermedia, func_bejerman
+import funciones_generales, func_baseintermedia
 import tkinter as tk
 from tkinter import ttk, messagebox  # Agregado messagebox
 
@@ -195,8 +195,8 @@ def ejecutar_proceso():
 			funciones_generales.log_grabar(f'ERROR - Termino programa - Exception: {e}',
 			                               config_logist_obj.dir_log)
 			funciones_generales.mover_archivo(
-				directorio_origen=config_logist_obj.dir_lista_entrega,
-				nombre_archivo_origen=config_logist_obj.archivo_entrega,
+				directorio_origen=config_logist_obj.dir_planilla_objetivos,
+				nombre_archivo_origen=config_logist_obj.planilla_objetivos,
 				extension_origen="xlsx",
 				directorio_exportar=config_logist_obj.dir_archivo_no_procesado,
 				incluye_fecha=config_logist_obj.dir_archivo_proc_incluye_fecha
