@@ -31,13 +31,14 @@
     "directorio_planilla_objetivos": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos",
     "planilla_objetivos": "Logistica_Objetivos",
     "planilla_objetivos_usuarios": "Logistica_Objetivos_Usuarios",
+    "canales_permitidos": ["MAYORISTA", "TIENDAS"],
     "tareas_permitidas": ["PICK", "EMP"],
     "tipos_tareas_permitidas": ["SKU", "PEDIDOS"],
     "dir_archivo_procesado": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\Procesado",
     "dir_archivo_no_procesado": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\NO_Procesado",
     "dir_items_no_procesados": "C:\\mis_entornos\\morano_logistica_objetivos\\src\\proyecto\\Archivos\\Items_NO_Procesados",
-    "items_no_proc_orden_campos": ["MOTIVO","FECHA", "TAREA", "TIPO_TAREA", "OBJETIVO"],
-    "items_no_proc_orden_campos_usuarios": ["MOTIVO","FECHA", "TAREA", "TIPO_TAREA", "USUARIO_NOMBRE","OBJETIVO"],
+    "items_no_proc_orden_campos": ["MOTIVO","FECHA", "CANAL", "TAREA", "TIPO_TAREA", "OBJETIVO"],
+    "items_no_proc_orden_campos_usuarios": ["MOTIVO","FECHA", "CANAL", "TAREA", "TIPO_TAREA", "USUARIO_NOMBRE","OBJETIVO"],
     "dir_archivo_proc_incluye_fecha": 1
   }
 }

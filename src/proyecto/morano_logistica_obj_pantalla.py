@@ -140,6 +140,7 @@ def ejecutar_proceso():
 				sql_pass=config_logist_obj.sql_pass_int,
 				nro_proceso=nro_proceso,
 				list_objetivos=objetivos,
+				obj_canales_perm=config_logist_obj.canales_permitidos,
 				obj_tareas_perm=config_logist_obj.tareas_permitidas,
 				obj_tipos_tareas_perm=config_logist_obj.tipos_tareas_permitidas,
 			)
@@ -273,6 +274,7 @@ def ejecutar_proceso():
 				sql_pass=config_logist_obj.sql_pass_int,
 				nro_proceso=nro_proceso,
 				list_objetivos=objetivos,
+				obj_canales_perm=config_logist_obj.canales_permitidos,
 				obj_tareas_perm=config_logist_obj.tareas_permitidas,
 				obj_tipos_tareas_perm=config_logist_obj.tipos_tareas_permitidas,
 				obj_usuarios_existentes=list_usuarios

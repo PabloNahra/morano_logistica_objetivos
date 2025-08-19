@@ -120,6 +120,7 @@ def obtener_usuarios_old(sql_server, sql_db, sql_user, sql_pass):
 def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass,
                        nro_proceso,
                        list_objetivos,
+                       obj_canales_perm,
                        obj_tareas_perm,
                        obj_tipos_tareas_perm):
 	"""
@@ -131,6 +132,7 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass,
 	:param sql_pass: Contraseña de SQL Server.
 	:param nro_proceso: Número de proceso
 	:param list_objetivos: Lista de diccionarios con los datos de las entregas
+	:param obj_canales_perm: Listado de canales de objetivos permitidos (Valores de la columna CANAL)
 	:param obj_tareas_perm: Listado de tareas de objetivos permitidas (Valores de la columna TAREA)
 	:param obj_tipos_tareas_perm: Listado de tipos de tareas de objetivos permitidas (Valores de la columna TIPO_TAREA)
 
@@ -153,6 +155,7 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass,
 		objetivos_procesados = set()
 		list_objetivos_filtrada = []
 		list_objetivos_no_integrar = []
+		obj_canales_perm_lower = {tp.lower() for tp in obj_canales_perm}
 		obj_tareas_perm_lower = {tp.lower() for tp in obj_tareas_perm}
 		obj_tipos_tareas_perm_lower = {tp.lower() for tp in obj_tipos_tareas_perm}
 		for objetivo in list_objetivos:
@@ -161,16 +164,22 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass,
 			            + "-" + funciones_generales.safe_str(objetivo.get('TAREA'))
 			            + "-" + funciones_generales.safe_str(objetivo.get('TIPO_TAREA')))
 
+			canal = funciones_generales.safe_str(objetivo.get('CANAL')).lower()
 			tarea = funciones_generales.safe_str(objetivo.get('TAREA')).lower()
 			tipo_tarea = funciones_generales.safe_str(objetivo.get('TIPO_TAREA')).lower()
 			# Si repite la numercación no lo integro
 			if objetivo_id in objetivos_procesados:
 				objetivo['MOTIVO'] = 'DUPLICADO'
 				list_objetivos_no_integrar.append(objetivo)
-			# Si el transporte no está dentro de los permitidos NO lo integro
+			# Si el canal NO está permitido NO se integra el objetivo
+			elif canal not in obj_canales_perm_lower:
+				objetivo['MOTIVO'] = 'CANAL NO PERMITIDO'
+				list_objetivos_no_integrar.append(objetivo)
+			# Si la tarea NO está permitida NO se integra el objetivo
 			elif tarea not in obj_tareas_perm_lower:
 				objetivo['MOTIVO'] = 'TAREA NO PERMITIDA'
 				list_objetivos_no_integrar.append(objetivo)
+			# Si el tipo de tarea NO está permitida NO se integra el objetivo
 			elif tipo_tarea not in obj_tipos_tareas_perm_lower:
 				objetivo['MOTIVO'] = 'TIPO_TAREA NO PERMITIDA'
 				list_objetivos_no_integrar.append(objetivo)
@@ -186,28 +195,15 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass,
 
 			# Transformaciones y validaciones
 			fecha = obj.get('FECHA', None)
+			canal = funciones_generales.safe_str(obj.get('CANAL'))
 			tarea = funciones_generales.safe_str(obj.get('TAREA'))
 			tipo_tarea = funciones_generales.safe_str(obj.get('TIPO_TAREA'))
 			objetivo = funciones_generales.safe_int(obj.get('OBJETIVO'))  # Convertir a int
 
-			'''
-			remito = funciones_generales.safe_str(funciones_generales.safe_int(ent.get('Remito')))  # Convertir a int y luego a str
-			cliente = funciones_generales.safe_str(ent.get('Cliente'))
-			destinatario = funciones_generales.safe_str(ent.get('Destinatario'))
-			domicilio = funciones_generales.safe_str(ent.get('Domicilio'))
-			provincia = funciones_generales.safe_str(ent.get('Provincia'))
-			ciudad = funciones_generales.safe_str(ent.get('Ciudad'))
-			codigo_postal = funciones_generales.safe_str(funciones_generales.safe_int(ent.get('Codigo Postal')))  # Convertir a int y luego a str
-			retiro_generada = ent.get('Retiro Generada', None)
-			retiro_efectivo = ent.get('Retiro Efectivo', None)
-			entrega_efectiva = ent.get('Entrega Efectiva', None)
-			tipo_entrega = funciones_generales.safe_str(ent.get('Tipo de Entrega'))
-			cantidad_bulto = funciones_generales.safe_int(ent.get('Cantidad de Bulto'))  # Convertir a int
-			'''
 
 			# Agregar a la lista de inserción
 			datos_insert.append((
-				fecha, tarea, tipo_tarea, objetivo
+				fecha, canal, tarea, tipo_tarea, objetivo
 			))
 
 		# Ejecución masiva de INSERT
@@ -215,8 +211,10 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass,
 
 			sql_upsert = f"""
 			    MERGE INTO {config_logist_obj.tabla_datosexcel} AS target
-			    USING (VALUES (?, ?, ?, ?)) AS source (Fecha, Tarea, Tipo_Tarea, Objetivo)
-			    ON target.Fecha = source.Fecha AND target.Tarea = source.Tarea
+			    USING (VALUES (?, ?, ?, ?, ?)) AS source (Fecha, Canal, Tarea, Tipo_Tarea, Objetivo)
+			    ON target.Fecha = source.Fecha 
+			    AND target.Canal = source.Canal 
+			    AND target.Tarea = source.Tarea
 			    AND target.Tipo_Tarea = source.Tipo_Tarea
 			    WHEN MATCHED THEN
 			        UPDATE SET 
@@ -225,9 +223,10 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass,
 			            Fecha_Proceso = GETDATE(),
 			            HostName_Proceso = HOST_NAME()
 			    WHEN NOT MATCHED THEN
-			        INSERT (Nro_Proceso, Fecha_Proceso, HostName_Proceso, Fecha, Tarea, Tipo_Tarea, Objetivo)
+			        INSERT (Nro_Proceso, Fecha_Proceso, HostName_Proceso, Fecha, Canal, Tarea, Tipo_Tarea, Objetivo)
 			        VALUES ({nro_proceso}, GETDATE(), HOST_NAME(), 
-			        source.Fecha, source.Tarea, 
+			        source.Fecha,source.Canal, 
+			        source.Tarea, 
 			        source.Tipo_Tarea, source.Objetivo);
 			"""
 
@@ -255,6 +254,7 @@ def insert_datos_excel(sql_server, sql_db, sql_user, sql_pass,
 def insert_datos_excel_usuarios(sql_server, sql_db, sql_user, sql_pass,
                        nro_proceso,
                        list_objetivos,
+                                obj_canales_perm,
                        obj_tareas_perm,
                        obj_tipos_tareas_perm,
                                 obj_usuarios_existentes):
@@ -266,7 +266,8 @@ def insert_datos_excel_usuarios(sql_server, sql_db, sql_user, sql_pass,
 	:param sql_user: Usuario de SQL Server.
 	:param sql_pass: Contraseña de SQL Server.
 	:param nro_proceso: Número de proceso
-	:param list_objetivos: Lista de diccionarios con los datos de las entregas
+	:param list_objetivos: Lista de diccionarios con los datos de los objetivos
+	:param obj_canales_perm: Listado de canales de objetivos permitidos (Valores de la columna CANAL)
 	:param obj_tareas_perm: Listado de tareas de objetivos permitidas (Valores de la columna TAREA)
 	:param obj_tipos_tareas_perm: Listado de tipos de tareas de objetivos permitidas (Valores de la columna TIPO_TAREA)
 	:param obj_usuarios_existentes: Listado de Usuarios existentes en la base de datos (Valores de la columna USUARIO_NOMBRE)
@@ -290,6 +291,7 @@ def insert_datos_excel_usuarios(sql_server, sql_db, sql_user, sql_pass,
 		objetivos_procesados = set()
 		list_objetivos_filtrada = []
 		list_objetivos_no_integrar = []
+		obj_canales_perm_lower = {tp.lower() for tp in obj_canales_perm}
 		obj_tareas_perm_lower = {tp.lower() for tp in obj_tareas_perm}
 		obj_tipos_tareas_perm_lower = {tp.lower() for tp in obj_tipos_tareas_perm}
 		# Convertir todos los valores relevantes a minúsculas en cada diccionario
@@ -315,13 +317,13 @@ def insert_datos_excel_usuarios(sql_server, sql_db, sql_user, sql_pass,
 				list_objetivos_no_integrar.append(objetivo)
 				continue
 
-			# remito_valor = funciones_generales.safe_str(funciones_generales.safe_int(objetivo.get('Remito')))  # Convertir a int y luego a str
 			objetivo_id = (funciones_generales.safe_str(objetivo.get('FECHA'))
-			            + "-" + funciones_generales.safe_str(objetivo.get('TAREA'))
-			            + "-" + funciones_generales.safe_str(objetivo.get('TIPO_TAREA'))
+			               + "-" + funciones_generales.safe_str(objetivo.get('CANAL'))
+			               + "-" + funciones_generales.safe_str(objetivo.get('TAREA'))
+			               + "-" + funciones_generales.safe_str(objetivo.get('TIPO_TAREA'))
 			               + "-" + usuario_id)
 
-
+			canal = funciones_generales.safe_str(objetivo.get('CANAL')).lower()
 			tarea = funciones_generales.safe_str(objetivo.get('TAREA')).lower()
 			tipo_tarea = funciones_generales.safe_str(objetivo.get('TIPO_TAREA')).lower()
 
@@ -329,10 +331,15 @@ def insert_datos_excel_usuarios(sql_server, sql_db, sql_user, sql_pass,
 			if objetivo_id in objetivos_procesados:
 				objetivo['MOTIVO'] = 'DUPLICADO'
 				list_objetivos_no_integrar.append(objetivo)
-			# Si el transporte no está dentro de los permitidos NO lo integro
+			# Si la TAREA no está dentro de los permitidos NO lo integro
+			elif canal not in obj_canales_perm_lower:
+				objetivo['MOTIVO'] = 'CANAL NO PERMITIDO'
+				list_objetivos_no_integrar.append(objetivo)
+			# Si la TAREA no está dentro de los permitidos NO lo integro
 			elif tarea not in obj_tareas_perm_lower:
 				objetivo['MOTIVO'] = 'TAREA NO PERMITIDA'
 				list_objetivos_no_integrar.append(objetivo)
+			# Si el TIPO_TAREA no está dentro de los permitidos NO lo integro
 			elif tipo_tarea not in obj_tipos_tareas_perm_lower:
 				objetivo['MOTIVO'] = 'TIPO_TAREA NO PERMITIDA'
 				list_objetivos_no_integrar.append(objetivo)
@@ -349,30 +356,16 @@ def insert_datos_excel_usuarios(sql_server, sql_db, sql_user, sql_pass,
 
 			# Transformaciones y validaciones
 			fecha = obj.get('FECHA', None)
+			canal = funciones_generales.safe_str(obj.get('CANAL'))
 			tarea = funciones_generales.safe_str(obj.get('TAREA'))
 			tipo_tarea = funciones_generales.safe_str(obj.get('TIPO_TAREA'))
 			usuario_id = funciones_generales.safe_str(obj.get('USUARIO_ID'))
 			usuario_nombre = funciones_generales.safe_str(obj.get('USUARIO_NOMBRE'))
 			objetivo = funciones_generales.safe_int(obj.get('OBJETIVO'))  # Convertir a int
 
-			'''
-			remito = funciones_generales.safe_str(funciones_generales.safe_int(ent.get('Remito')))  # Convertir a int y luego a str
-			cliente = funciones_generales.safe_str(ent.get('Cliente'))
-			destinatario = funciones_generales.safe_str(ent.get('Destinatario'))
-			domicilio = funciones_generales.safe_str(ent.get('Domicilio'))
-			provincia = funciones_generales.safe_str(ent.get('Provincia'))
-			ciudad = funciones_generales.safe_str(ent.get('Ciudad'))
-			codigo_postal = funciones_generales.safe_str(funciones_generales.safe_int(ent.get('Codigo Postal')))  # Convertir a int y luego a str
-			retiro_generada = ent.get('Retiro Generada', None)
-			retiro_efectivo = ent.get('Retiro Efectivo', None)
-			entrega_efectiva = ent.get('Entrega Efectiva', None)
-			tipo_entrega = funciones_generales.safe_str(ent.get('Tipo de Entrega'))
-			cantidad_bulto = funciones_generales.safe_int(ent.get('Cantidad de Bulto'))  # Convertir a int
-			'''
-
 			# Agregar a la lista de inserción
 			datos_insert.append((
-				fecha, tarea, tipo_tarea,
+				fecha, canal, tarea, tipo_tarea,
 				usuario_id, usuario_nombre, objetivo
 			))
 
@@ -381,10 +374,12 @@ def insert_datos_excel_usuarios(sql_server, sql_db, sql_user, sql_pass,
 
 			sql_upsert = f"""
 			    MERGE INTO {config_logist_obj.tabla_objetivos_usuarios} AS target
-			    USING (VALUES (?, ?, ?, ?, ?, ?)) AS source 
-			    (Fecha, Tarea, Tipo_Tarea, Usuario_ID, 
+			    USING (VALUES (?, ?, ?, ?, ?, ?, ?)) AS source 
+			    (Fecha, Canal, Tarea, Tipo_Tarea, Usuario_ID, 
 			    Usuario_Nombre, Objetivo)
-			    ON target.Fecha = source.Fecha AND target.Tarea = source.Tarea
+			    ON target.Fecha = source.Fecha 
+			    AND target.Canal = source.Canal 
+			    AND target.Tarea = source.Tarea
 			    AND target.Tipo_Tarea = source.Tipo_Tarea
 			    AND target.Usuario_ID = source.Usuario_ID
 			    WHEN MATCHED THEN
@@ -395,11 +390,13 @@ def insert_datos_excel_usuarios(sql_server, sql_db, sql_user, sql_pass,
 			            HostName_Proceso = HOST_NAME()
 			    WHEN NOT MATCHED THEN
 			        INSERT (Nro_Proceso, Fecha_Proceso, HostName_Proceso, 
-			        Fecha, Tarea, Tipo_Tarea, 
+			        Fecha, Canal, Tarea, Tipo_Tarea, 
 			        Usuario_ID, Usuario_Nombre, 
 			        Objetivo)
 			        VALUES ({nro_proceso}, GETDATE(), HOST_NAME(), 
-			        source.Fecha, source.Tarea, 
+			        source.Fecha, 
+			        source.Canal, 
+			        source.Tarea, 
 			        source.Tipo_Tarea, 
 			        source.Usuario_ID, source.Usuario_Nombre, 
 			        source.Objetivo);

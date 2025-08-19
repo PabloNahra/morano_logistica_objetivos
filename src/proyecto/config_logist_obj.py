@@ -75,6 +75,7 @@ tabla_objetivos_usuarios = json_data['parametros_negocio']['tabla_objetivos_usua
 dir_planilla_objetivos = Path(json_data['parametros_negocio']['directorio_planilla_objetivos'])
 planilla_objetivos = json_data['parametros_negocio']['planilla_objetivos']
 planilla_objetivos_usuarios = json_data['parametros_negocio']['planilla_objetivos_usuarios']
+canales_permitidos = json_data['parametros_negocio']['canales_permitidos']
 tareas_permitidas = json_data['parametros_negocio']['tareas_permitidas']
 tipos_tareas_permitidas = json_data['parametros_negocio']['tipos_tareas_permitidas']
 dir_archivo_procesado = Path(json_data['parametros_negocio']['dir_archivo_procesado'])
